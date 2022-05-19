@@ -31,7 +31,7 @@
         /// <summary>
         /// Numero Medico da Cedula Profisional do Medico
         /// </summary>
-        public int NumCedulaProf { get; set; }
+        public string NumCedulaProf { get; set; }
 
         /// <summary>
         /// Data de Nascimento do Medico

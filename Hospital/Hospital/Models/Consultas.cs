@@ -12,7 +12,7 @@ namespace Hospital.Models
         /// <summary>
         /// Data que a consulta está marcada
         /// </summary>
-        public string Data { get; set; }
+        public DateTime Data { get; set; }
 
         /// <summary>
         /// Motivo que o Utente Marcou a Consulta

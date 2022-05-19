@@ -20,7 +20,7 @@ namespace Hospital.Models
         public DateTime Data { get; set; }
 
         /// <summary>
-        /// Estado da prescicao
+        /// Estado da prescicao se está ativa ou desativa
         /// </summary>
         public bool Estado { get; set; }
 
