@@ -20,6 +20,9 @@
         /// </summary>
         public string Nome { get; set; }
 
+        /// <summary>
+        /// Lista de médicos da especialidade
+        /// </summary>
         public ICollection<Medicos> ListaMedicos { get; set; }
 
 

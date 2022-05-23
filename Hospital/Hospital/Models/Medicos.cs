@@ -56,7 +56,7 @@
         public ICollection<Consultas> ListaConsultas { get; set; }
 
         /// <summary>
-        /// Lista de Especialidades Médicas do Medico
+        /// Lista das Especialidadess do Medico
         /// </summary>
         public ICollection<Especialidades> ListaEspecialidades { get; set; }
 

@@ -25,15 +25,23 @@ namespace Hospital.Models
         /// </summary>
         public string Estado { get; set; }
 
-
+        /// <summary>
+        /// FK para o utente
+        /// </summary>
         [ForeignKey(nameof(Utente))]
         public int UtenteFK { get; set; }
         public Utentes Utente { get; set; }
 
+        /// <summary>
+        /// FK para o Medico
+        /// </summary>
         [ForeignKey(nameof(Medico))]
         public int MedicoFK { get; set; }
         public Medicos Medico { get; set; }
 
+        /// <summary>
+        /// FK para o Diagnostico
+        /// </summary>
         [ForeignKey(nameof(Diagnostico))]
         public int DiagnosticoFK { get; set; }
         public Diagnosticos Diagnostico { get; set; }

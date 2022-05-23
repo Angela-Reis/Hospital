@@ -32,7 +32,9 @@ namespace Hospital.Models
         /// </summary>
         public string Metodo { get; set; }
 
-
+        /// <summary>
+        /// FK da Consulta a qual o pagamento pertence
+        /// </summary>
         [ForeignKey(nameof(Consulta))]
         public int ConsultaFK { get; set; }
         public Consultas Consulta { get; set; }

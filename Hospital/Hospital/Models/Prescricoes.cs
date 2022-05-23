@@ -24,6 +24,10 @@ namespace Hospital.Models
         /// </summary>
         public bool Estado { get; set; }
 
+
+        /// <summary>
+        /// FK do Diagnostico para qual a prescrição é necessaria
+        /// </summary>
         [ForeignKey(nameof(Diagnostico))]
         public int DiagnosticoFK { get; set; }
         public Diagnosticos Diagnostico { get; set; }
