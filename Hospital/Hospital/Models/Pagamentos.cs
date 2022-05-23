@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Hospital.Models
 {
@@ -11,11 +12,27 @@ namespace Hospital.Models
         /// PK para identificar o pagamento
         /// </summary>
         public int Id { get; set; }
-
+        
+        
+        /// <summary>
+        /// Atributo auxiliar para introduzir o valor do pagamento
+        /// </summary>
+        [NotMapped]  
+        [Required(ErrorMessage = "O {0} é de preenchimento obrigatório")]
+        [RegularExpression("[0-9]{1,8}[,.]?[0-9]{0,2}", ErrorMessage = "You must write the price of appointement")]
+        [Display(Name = "Valor")]
+        public string AuxValor { get; set; }
         /// <summary>
         /// Valor do Pagamento
         /// </summary>
-        public string Valor { get; set; }
+        public decimal Valor { get; set; }
+
+        /// <summary>
+        /// Descrição do Pagamento
+        /// </summary>
+        [Required(ErrorMessage = "o {0} é de preenchimento obrigatório")]
+
+        public string Descricao { get; set; }
 
         /// <summary>
         /// Estado do pagamento, se foi efetuado ou está pendente
@@ -23,9 +40,12 @@ namespace Hospital.Models
         public bool Estado { get; set; }
 
         /// <summary>
-        /// Data de quando foi efetuado o pagamento
+        /// Data em que foi efetuado o pagamento
         /// </summary>
-        public DateTime Data { get; set; }
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        [DataType(DataType.Date)]
+        [Display(Name = "Data em que foi efetuado o pagamento")]
+        public DateTime DataEfetuado { get; set; }
 
         /// <summary>
         /// Metodo de pagamento

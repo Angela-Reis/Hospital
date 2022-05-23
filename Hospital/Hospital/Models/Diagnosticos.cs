@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Hospital.Models
 {
@@ -13,10 +14,12 @@ namespace Hospital.Models
         /// PK tabela Diagnosticos
         /// </summary>
         public int Id { get; set; }
-        
+
         /// <summary>
         /// Descrição do Diagnostico
         /// </summary>
+        [Required(ErrorMessage = "A {0} é de preenchimento obrigatório")]
+        [RegularExpression("[A-Za-z ]+", ErrorMessage = "No {0} só são aceites letras")]
         public string Descricao { get; set; }
 
 
@@ -24,6 +27,7 @@ namespace Hospital.Models
         /// Estado do Diagnostico
         /// T=Tratamento, C=Cronico
         /// </summary>
+        [RegularExpression("[TtCc]", ErrorMessage = "Só pode usar T, ou C, no campo {0}")]
         public string Estado { get; set; }
 
         /// <summary>

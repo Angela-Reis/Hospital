@@ -1,4 +1,6 @@
-﻿namespace Hospital.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Hospital.Models
 {
     /// <summary>
     /// Lista de Especilidades que o Hospital disponibiliza
@@ -18,6 +20,8 @@
         /// <summary>
         /// Nome da Especialidade
         /// </summary>
+        [Required(ErrorMessage = "O {0} é de preenchimento obrigatório")]
+        [RegularExpression("[A-Za-z ]+", ErrorMessage = "No {0} só são aceites letras")]
         public string Nome { get; set; }
 
         /// <summary>

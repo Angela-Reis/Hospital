@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Hospital.Models
 {
@@ -12,11 +13,15 @@ namespace Hospital.Models
         /// <summary>
         /// Data que a consulta está marcada
         /// </summary>
+        [Required(ErrorMessage = "A {0} é de preenchimento obrigatório")]
+        [DataType(DataType.Date)]
         public DateTime Data { get; set; }
 
         /// <summary>
         /// Motivo que o Utente Marcou a Consulta
         /// </summary>
+        [Required(ErrorMessage = "o {0} é de preenchimento obrigatório")]
+        [StringLength(800, ErrorMessage = "O {0} não pode ter mais do que {1} caracteres.")]
         public string Motivo { get; set; }
 
         /// <summary>

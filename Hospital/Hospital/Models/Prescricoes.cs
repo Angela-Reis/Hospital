@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Hospital.Models
 {
@@ -12,13 +13,17 @@ namespace Hospital.Models
         /// <summary>
         /// Descricao da Prescicao
         /// </summary>
+        [Required(ErrorMessage = "A {0} é de preenchimento obrigatório")]
+        [Display(Name = "Descrição")]
         public string Descricao { get; set; }
 
         /// <summary>
         /// Data em que a Prescicao foi efetuada
         /// </summary>
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        [DataType(DataType.Date)]
         public DateTime Data { get; set; }
-
+        
         /// <summary>
         /// Estado da prescicao se está ativa ou desativa
         /// </summary>
