@@ -22,7 +22,8 @@ namespace Hospital.Controllers
         // GET: Especialidades
         public async Task<IActionResult> Index()
         {
-              return View(await _context.Especialidades.ToListAsync());
+            //incluir a lista de Medicos
+            return View(await _context.Especialidades.Include(x => x.ListaMedicos).ToListAsync());
         }
 
         // GET: Especialidades/Details/5
@@ -32,9 +33,9 @@ namespace Hospital.Controllers
             {
                 return NotFound();
             }
+            //devolve, se existir, a especialidade com o id selecionado, incluindo a lista de medicos que pertecem a esta especialidade
+            var especialidades = await _context.Especialidades.Include(x => x.ListaMedicos).FirstOrDefaultAsync(m => m.Id == id);
 
-            var especialidades = await _context.Especialidades
-                .FirstOrDefaultAsync(m => m.Id == id);
             if (especialidades == null)
             {
                 return NotFound();
@@ -46,6 +47,12 @@ namespace Hospital.Controllers
         // GET: Especialidades/Create
         public IActionResult Create()
         {
+            var lista = _context.Medicos.Select(m => new
+            {
+                m.Id,
+                Nome = m.NumCedulaProf + " - " + m.Nome
+            }).ToList();
+            ViewData["ListaMedicos"] = new MultiSelectList(lista, nameof(Medicos.Id), nameof(Medicos.Nome));
             return View();
         }
 
@@ -54,11 +61,18 @@ namespace Hospital.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nome")] Especialidades especialidades)
+        public async Task<IActionResult> Create([Bind("Id,Nome,MedicosId")] Especialidades especialidades, int[] MedicosId)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(especialidades);
+                foreach (int medicoId in MedicosId)
+                {
+                    var medico = _context.Medicos
+                    .Include(p => p.ListaEspecialidades)
+                    .Single(p => p.Id == medicoId);
+                    medico.ListaEspecialidades.Add(especialidades);
+                }
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -72,12 +86,23 @@ namespace Hospital.Controllers
             {
                 return NotFound();
             }
-
-            var especialidades = await _context.Especialidades.FindAsync(id);
+            //procura a especialidade pelo id e inclui a lista
+            var especialidades = await _context.Especialidades.Include(e => e.ListaMedicos).FirstOrDefaultAsync(i => i.Id == id); ;
             if (especialidades == null)
             {
                 return NotFound();
             }
+
+            //lista dos ids e nomes de todos os medicos 
+            var lista = _context.Medicos.Select(m => new
+            {
+                m.Id,
+                Nome = m.NumCedulaProf + " - " + m.Nome
+            }).ToList();
+
+            //devolve todos os medicos que já pertencem à especialidade
+            var selecionados = especialidades.ListaMedicos.Select(x => x.Id).ToArray();
+            ViewData["ListaMedicos"] = new MultiSelectList(lista, nameof(Medicos.Id), nameof(Medicos.Nome), selecionados);
             return View(especialidades);
         }
 
@@ -86,17 +111,37 @@ namespace Hospital.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nome")] Especialidades especialidades)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nome,MedicosId")] Especialidades especialidades, int[] MedicosId)
         {
             if (id != especialidades.Id)
             {
                 return NotFound();
             }
+            especialidades = await _context.Especialidades.Include(e => e.ListaMedicos).FirstOrDefaultAsync(i => i.Id == id);
 
             if (ModelState.IsValid)
             {
                 try
                 {
+                    //Especialidade anteriormente
+                    if (especialidades != null)
+                    {
+                        //remover medicos------------------------------------------
+                        //verificar que id existentes anteriormente não existem nos novos id selecionados
+                        var removerMedicos = especialidades.ListaMedicos.Where(m => !MedicosId.Contains(m.Id)).Select(m => m.Id).ToList();
+                        foreach (var remover in removerMedicos)
+                        {
+                            especialidades.ListaMedicos.Remove(especialidades.ListaMedicos.Single(x => x.Id == remover));
+                        }
+                        //adicionar medicos ------------------------------------
+                        //verificar que id novos não existem nos id previos
+                        var lista = especialidades.ListaMedicos.Select(lm => lm.Id).ToList();
+                        var adicionarMedicos = MedicosId.Where(m => !lista.Contains(m)).ToList();
+                        foreach (var adicionar in adicionarMedicos)
+                        {
+                            especialidades.ListaMedicos.Add(_context.Medicos.Single(p => p.Id == adicionar));
+                        }
+                    }
                     _context.Update(especialidades);
                     await _context.SaveChangesAsync();
                 }
@@ -124,7 +169,7 @@ namespace Hospital.Controllers
                 return NotFound();
             }
 
-            var especialidades = await _context.Especialidades
+            var especialidades = await _context.Especialidades.Include(x => x.ListaMedicos)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (especialidades == null)
             {
@@ -148,14 +193,14 @@ namespace Hospital.Controllers
             {
                 _context.Especialidades.Remove(especialidades);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool EspecialidadesExists(int id)
         {
-          return _context.Especialidades.Any(e => e.Id == id);
+            return _context.Especialidades.Any(e => e.Id == id);
         }
     }
 }

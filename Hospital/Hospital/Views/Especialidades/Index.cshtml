@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Index das Especialidades</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -15,6 +15,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Nome)
             </th>
+            <th>
+                Número de Medicos
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -23,6 +26,10 @@
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Nome)
+            </td>
+            <td>
+                @*Mostra número de médicos da Especialidade*@
+                 @item.ListaMedicos.Count()
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
