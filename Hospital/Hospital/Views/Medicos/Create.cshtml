@@ -4,24 +4,14 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+<h1>Criar</h1>
 
-<h4>Medicos</h4>
+<h4>Médico</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
+    <div class="col-md-6">
+        <form asp-action="Create" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="NumTelefone" class="control-label"></label>
-                <input asp-for="NumTelefone" class="form-control" />
-                <span asp-validation-for="NumTelefone" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
             <div class="form-group">
                 <label asp-for="Nome" class="control-label"></label>
                 <input asp-for="Nome" class="form-control" />
@@ -33,14 +23,38 @@
                 <span asp-validation-for="NumCedulaProf" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="NumTelefone" class="control-label"></label>
+                <input asp-for="NumTelefone" class="form-control" />
+                <span asp-validation-for="NumTelefone" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
                 <label asp-for="DataNascimento" class="control-label"></label>
                 <input asp-for="DataNascimento" class="form-control" />
                 <span asp-validation-for="DataNascimento" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Foto" class="control-label"></label>
-                <input asp-for="Foto" class="form-control" />
-                <span asp-validation-for="Foto" class="text-danger"></span>
+			<div class="form-group">
+				<label asp-for="Foto" class="control-label"></label><br />
+				@*<input asp-for="Foto" class="form-control" />*@
+                @*Mostrar uma preview da foto do medico*@
+				<img id="imgVer" src="/Fotos/Medicos/semFoto.png" alt="imagem" height="100" />
+				<input type="file" id="novaFoto" name="novaFotoMed"
+					   class="form-control" accept=".jpg,.png" onchange="MostraPreview(event)" />
+				<span asp-validation-for="Foto" class="text-danger"></span>
+			</div>
+             <div class="form-group" >
+                <label asp-for="ListaEspecialidades" class="control-label"></label>
+                <br />
+                @*Formulario com checkbox para selecionar as especialidade do médico*@
+                @foreach ( var item in (MultiSelectList)ViewBag.ListaEspecialidades){
+                    <input type="checkbox" placeholder="@item.Text" value="@item.Value" name="EspecialidadeId" /> @item.Text<br />
+                }
+                <br />
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
@@ -52,6 +66,20 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
+<script type="text/javascript">
+    //Mostra uma preview da imagem em imgVer
+    function MostraPreview(event) {
+        var output = document.getElementById('imgVer');
+        if(event.target.files.length !== 0){
+            output.src = URL.createObjectURL(event.target.files[0]);
+            output.onload = function() {
+                URL.revokeObjectURL(output.src)
+            }
+        }else{
+            document.getElementById('imgVer').src = '/Fotos/Medicos/semFoto.png';
+        }
+    };
+</script>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

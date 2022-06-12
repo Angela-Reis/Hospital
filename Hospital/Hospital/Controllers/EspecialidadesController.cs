@@ -103,6 +103,10 @@ namespace Hospital.Controllers
             //devolve todos os medicos que já pertencem à especialidade
             var selecionados = especialidades.ListaMedicos.Select(x => x.Id).ToArray();
             ViewData["ListaMedicos"] = new MultiSelectList(lista, nameof(Medicos.Id), nameof(Medicos.Nome), selecionados);
+
+            //guardar o id da especialidade a ser editada numa variavel de sessão
+            HttpContext.Session.SetInt32("EspeId", especialidades.Id);
+
             return View(especialidades);
         }
 
@@ -117,8 +121,25 @@ namespace Hospital.Controllers
             {
                 return NotFound();
             }
-            especialidades = await _context.Especialidades.Include(e => e.ListaMedicos).FirstOrDefaultAsync(i => i.Id == id);
+        
+            var espPrevioGuardada = HttpContext.Session.GetInt32("EspeId");
+            //verificar se o id é igual ao guardado anteriormente
+            if (espPrevioGuardada == null)
+            {
+                ModelState.AddModelError("", "Sessão Expirou, passou de tempo");
+                return View(especialidades);
+            }
 
+            if (espPrevioGuardada != especialidades.Id)
+            {
+                return RedirectToAction("Index");
+            }
+
+            //guardar o nome novo 
+            string nomeNovo = especialidades.Nome;
+            //pedir os dados anteriores
+            especialidades = await _context.Especialidades.Include(e => e.ListaMedicos).FirstOrDefaultAsync(i => i.Id == id);
+            especialidades.Nome = nomeNovo;
             if (ModelState.IsValid)
             {
                 try

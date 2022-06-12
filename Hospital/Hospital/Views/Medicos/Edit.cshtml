@@ -1,59 +1,133 @@
 ﻿@model Hospital.Models.Medicos
 
 @{
-    ViewData["Title"] = "Edit";
+	ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+<h1>Editar</h1>
 
-<h4>Medicos</h4>
+<h4>Médico</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="NumTelefone" class="control-label"></label>
-                <input asp-for="NumTelefone" class="form-control" />
-                <span asp-validation-for="NumTelefone" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Nome" class="control-label"></label>
-                <input asp-for="Nome" class="form-control" />
-                <span asp-validation-for="Nome" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="NumCedulaProf" class="control-label"></label>
-                <input asp-for="NumCedulaProf" class="form-control" />
-                <span asp-validation-for="NumCedulaProf" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DataNascimento" class="control-label"></label>
-                <input asp-for="DataNascimento" class="form-control" />
-                <span asp-validation-for="DataNascimento" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Foto" class="control-label"></label>
-                <input asp-for="Foto" class="form-control" />
-                <span asp-validation-for="Foto" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
+	<div class="col-md-4">
+		<form asp-action="Edit" method="post" enctype="multipart/form-data">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+			<input type="hidden" asp-for="Id" />
+			<div class="form-group">
+				<label asp-for="Nome" class="control-label"></label>
+				<input asp-for="Nome" class="form-control" />
+				<span asp-validation-for="Nome" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="NumCedulaProf" class="control-label"></label>
+				<input asp-for="NumCedulaProf" class="form-control" />
+				<span asp-validation-for="NumCedulaProf" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="NumTelefone" class="control-label"></label>
+				<input asp-for="NumTelefone" class="form-control" />
+				<span asp-validation-for="NumTelefone" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="Email" class="control-label"></label>
+				<input asp-for="Email" class="form-control" />
+				<span asp-validation-for="Email" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="DataNascimento" class="control-label"></label>
+				<input asp-for="DataNascimento" class="form-control" />
+				<span asp-validation-for="DataNascimento" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				@*Alterar, ou manter, a Foto do utilizador*@
+				<label asp-for="Foto" class="control-label"></label>
+				@* <input asp-for="Foto" class="form-control" />*@
+				<div id="previewFoto" >
+					@{string anterior = @Model.Foto;}
+					<input type="hidden" asp-for="Foto" id="valorFoto" value="@Model.Foto"/>
+					<input type="hidden" name="FotoApagar" id="FotoApagar" value="false"/>
+				    <img  id="imgVer" src="/Fotos/Medicos/@Model.Foto" alt="imagem" height="100" />
+
+					@if (!@Model.Foto.Equals("semFoto.png"))
+					{
+						<div id="alterarFotoBD">
+							<button type="button"
+								onclick="document.getElementById('imgVer').src='/Fotos/Medicos/semFoto.png';
+										document.getElementById('valorFoto').value = 'semFoto.png';
+										document.getElementById('FotoApagar').value = true;">
+								Remover Imagem
+							</button>
+							<button type="button" onclick="document.getElementById('imgVer').src='/Fotos/Medicos/@Model.Foto';
+															document.getElementById('valorFoto').value = '@Model.Foto';
+															document.getElementById('FotoApagar').value = false;">
+								Reverter Mudanças
+							</button>
+						</div>
+					}
+
+				</div>
+				<input type="file" name="novaFotoMed" class="form-control" accept=".jpg,.png" onchange="MostraPreview(event)"/>
+				<span asp-validation-for="Foto" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="ListaEspecialidades" class="control-label"></label>
+				<br />
+				@*Formulario com checkbox para selecionar as especialidade do médico*@
+				@foreach (var item in (MultiSelectList)ViewBag.ListaEspecialidades)
+				{
+					<input type="checkbox" placeholder="@item.Text" value="@item.Value" name="EspecialidadeId" @(item.Selected ? "checked" : "") /> @item.Text
+
+					<br />
+				}
+				<br />
+			</div>
+			<div class="form-group">
+				<input type="submit" value="Save" class="btn btn-primary" />
+			</div>
+		</form>
+	</div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+	<a asp-action="Index">Back to List</a>
 </div>
 
+<script type="text/javascript">
+	//Mostra uma preview da imagem em imgVer
+    function MostraPreview(event) {
+        var output = document.getElementById('imgVer');
+		var fotoAtual = document.getElementById('valorFoto').value;
+        if(event.target.files.length !== 0){
+			//esconder butoes para remover a foto inicial
+			if("semFoto.png" !== '@Model.Foto' ){
+			document.getElementById('alterarFotoBD').style.display = 'none';
+			}
+            output.src = URL.createObjectURL(event.target.files[0]);
+            output.onload = function() {
+                URL.revokeObjectURL(output.src)
+            }
+			if(fotoAtual!== 'semFoto.png'){
+				document.getElementById('FotoApagar').value = 'true';
+			}
+        }else{
+			//voltar a mostrar a foto inicial
+			if(fotoAtual!== 'semFoto.png'){
+				document.getElementById('FotoApagar').value = 'false';
+			}
+			document.getElementById('imgVer').src = '/Fotos/Medicos/'+fotoAtual;
+			//se existe foto inicial, exceto a semFoto
+			if("semFoto.png" !== '@Model.Foto' ){
+				//mostrar butoes para remove-la
+				document.getElementById('alterarFotoBD').style.display = 'block';
+			}
+        }
+    };
+</script>
+
+
+
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+	await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
 }
