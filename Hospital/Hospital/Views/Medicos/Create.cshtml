@@ -64,10 +64,10 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+	<a asp-action="Index">Voltar à Lista</a>
 </div>
 <script type="text/javascript">
-    //Mostra uma preview da imagem em imgVer
+    @*Mostra uma preview da imagem na img com id 'imgVer'*@
     function MostraPreview(event) {
         var output = document.getElementById('imgVer');
         if(event.target.files.length !== 0){

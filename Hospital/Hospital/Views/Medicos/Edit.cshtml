@@ -51,16 +51,9 @@
 					@if (!@Model.Foto.Equals("semFoto.png"))
 					{
 						<div id="alterarFotoBD">
-							<button type="button"
-								onclick="document.getElementById('imgVer').src='/Fotos/Medicos/semFoto.png';
-										document.getElementById('valorFoto').value = 'semFoto.png';
-										document.getElementById('FotoApagar').value = true;">
+							<button id="alterarFoto" type="button"
+								onclick="alteraOriginal()">
 								Remover Imagem
-							</button>
-							<button type="button" onclick="document.getElementById('imgVer').src='/Fotos/Medicos/@Model.Foto';
-															document.getElementById('valorFoto').value = '@Model.Foto';
-															document.getElementById('FotoApagar').value = false;">
-								Reverter Mudanças
 							</button>
 						</div>
 					}
@@ -89,11 +82,11 @@
 </div>
 
 <div>
-	<a asp-action="Index">Back to List</a>
+	<a asp-action="Index">Voltar à Lista</a>
 </div>
 
 <script type="text/javascript">
-	//Mostra uma preview da imagem em imgVer
+	@*Mostra uma preview da imagem na img com id 'imgVer'*@
     function MostraPreview(event) {
         var output = document.getElementById('imgVer');
 		var fotoAtual = document.getElementById('valorFoto').value;
@@ -122,6 +115,23 @@
 			}
         }
     };
+
+	//Remover a foto original e retorna-la
+	function alteraOriginal(){
+		//se não esta selecionado para remover a foto original dar a opção de a apagar
+		if(document.getElementById('fotoApagar').value === 'false'){
+			document.getElementById('imgVer').src='/Fotos/Medicos/semFoto.png';
+			document.getElementById('valorFoto').value = 'semFoto.png';
+			document.getElementById('fotoApagar').value = true;
+			document.getElementById('alterarFoto').innerHTML = 'Retornar Foto';
+		}else if(document.getElementById('fotoApagar').value === 'true'){
+			//se está selecionada a opção de apagar a foto original dar a opção de reverter essa mudança
+			document.getElementById('imgVer').src='/Fotos/Medicos/@Model.Foto';
+			document.getElementById('valorFoto').value = '@Model.Foto';
+			document.getElementById('fotoApagar').value = false;
+			document.getElementById('alterarFoto').innerHTML = 'Remover Foto';
+		}
+	}
 </script>
 
 
