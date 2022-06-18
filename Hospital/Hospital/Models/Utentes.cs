@@ -43,14 +43,13 @@ namespace Hospital.Models
         [RegularExpression("[A-ZÂÓÍa-záéíóúàèìòùâêîôûãõäëïöüñç '-]+", ErrorMessage = "No {0} só são aceites letras")]
         public string Nome { get; set; }
 
-
         /// <summary>
         /// Numero de Utente do Utente
         /// </summary>
         [Required(ErrorMessage = "o {0} é de preenchimento obrigatório")]
         [Display(Name = "Número de Utente")]
         [StringLength(9, MinimumLength = 9, ErrorMessage = "O {0} tem de ter 9 carateres.")]
-        [RegularExpression("[1235789][0-9]{9}", ErrorMessage = "O {0} deve começar por 1,2,3,5,7,8,9 seguido de 8 digitos numéricos.")]
+        [RegularExpression("[1235789][0-9]{8}", ErrorMessage = "O {0} deve começar por 1,2,3,5,7,8,9 seguido de 8 digitos numéricos.")]
         public string NumUtente { get; set; }
 
         /// <summary>

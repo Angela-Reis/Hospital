@@ -1,66 +1,70 @@
 ﻿@model Hospital.Models.Utentes
 
 @{
-    ViewData["Title"] = "Details";
+	ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<h1>Detalhes</h1>
 
 <div>
-    <h4>Utentes</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.NumTelemovel)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.NumTelemovel)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Email)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Nome)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Nome)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.NumUtente)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.NumUtente)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.NIF)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.NIF)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DataNascimento)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DataNascimento)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Sexo)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Sexo)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Foto)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Foto)
-        </dd>
-    </dl>
+	<h4>Utente</h4>
+	<hr />
+	<dl class="row">
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Foto)
+		</dt>
+		<dd class="col-sm-10">
+			@*@Html.DisplayFor(model => model.Foto)*@
+			<img src="~/Fotos/Utentes/@Html.DisplayFor(model => model.Foto)"
+				 alt="foto do utente: @Html.DisplayFor(model => model.Nome)"
+				 title="@Html.DisplayFor(model => model.Nome)"
+				 height="200" />
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Nome)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Nome)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.NumUtente)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.NumUtente)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.NIF)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.NIF)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.NumTelemovel)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.NumTelemovel)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Email)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Email)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.DataNascimento)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.DataNascimento)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Sexo)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Sexo)
+		</dd>
+	</dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+	<a asp-action="Edit" asp-route-id="@Model?.Id">Editar</a> |
+	<a asp-action="Index">Voltar à Lista</a>
 </div>
