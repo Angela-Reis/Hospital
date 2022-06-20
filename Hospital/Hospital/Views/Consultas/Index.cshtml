@@ -46,18 +46,24 @@
                 @Html.DisplayFor(modelItem => item.Estado)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Utente.Email)
+                 @{  //concatenar o numero de utente do utente com o seu nome
+                     var utente = item.Utente.NumUtente + "-" + item.Utente.Nome;
+                 }
+                @Html.DisplayFor(modelItem => utente)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Medico.Email)
+                 @{  //concatenar o numero de cedula profissional do médico com o seu nome
+                     var medico = item.Medico.NumCedulaProf + "-" + item.Medico.Nome;
+                 }
+                 @Html.DisplayFor(modelItem => medico)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Diagnostico.Descricao)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Detalhes</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Apagar</a>
             </td>
         </tr>
 }

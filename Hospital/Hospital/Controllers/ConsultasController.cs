@@ -51,8 +51,8 @@ namespace Hospital.Controllers
         public IActionResult Create()
         {
             ViewData["DiagnosticoFK"] = new SelectList(_context.Diagnosticos, "Id", "Descricao");
-            ViewData["MedicoFK"] = new SelectList(_context.Medicos, "Id", "Email");
-            ViewData["UtenteFK"] = new SelectList(_context.Utentes, "Id", "Email");
+            ViewData["MedicoFK"] = new SelectList(_context.Medicos, "Id", "Nome");
+            ViewData["UtenteFK"] = new SelectList(_context.Utentes, "Id", "Nome");
             return View();
         }
 
@@ -61,18 +61,18 @@ namespace Hospital.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Data,Motivo,Estado,UtenteFK,MedicoFK,DiagnosticoFK")] Consultas consultas)
+        public async Task<IActionResult> Create([Bind("Id,Data,Motivo,Estado,UtenteFK,MedicoFK,DiagnosticoFK")] Consultas consulta)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(consultas);
+                _context.Add(consulta);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DiagnosticoFK"] = new SelectList(_context.Diagnosticos, "Id", "Descricao", consultas.DiagnosticoFK);
-            ViewData["MedicoFK"] = new SelectList(_context.Medicos, "Id", "Email", consultas.MedicoFK);
-            ViewData["UtenteFK"] = new SelectList(_context.Utentes, "Id", "Email", consultas.UtenteFK);
-            return View(consultas);
+            ViewData["DiagnosticoFK"] = new SelectList(_context.Diagnosticos, "Id", "Descricao", consulta.DiagnosticoFK);
+            ViewData["MedicoFK"] = new SelectList(_context.Medicos, "Id", "Nome", consulta.MedicoFK);
+            ViewData["UtenteFK"] = new SelectList(_context.Utentes, "Id", "Nome", consulta.UtenteFK);
+            return View(consulta);
         }
 
         // GET: Consultas/Edit/5
@@ -89,8 +89,10 @@ namespace Hospital.Controllers
                 return NotFound();
             }
             ViewData["DiagnosticoFK"] = new SelectList(_context.Diagnosticos, "Id", "Descricao", consultas.DiagnosticoFK);
-            ViewData["MedicoFK"] = new SelectList(_context.Medicos, "Id", "Email", consultas.MedicoFK);
-            ViewData["UtenteFK"] = new SelectList(_context.Utentes, "Id", "Email", consultas.UtenteFK);
+            ViewData["MedicoFK"] = new SelectList(_context.Medicos, "Id", "Nome", consultas.MedicoFK);
+            ViewData["UtenteFK"] = new SelectList(_context.Utentes, "Id", "Nome", consultas.UtenteFK);
+            //variavel de sessão que guarda o id da consulta a ser editada
+            HttpContext.Session.SetInt32("ConsultaEditId", consultas.Id);
             return View(consultas);
         }
 
@@ -99,23 +101,36 @@ namespace Hospital.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Data,Motivo,Estado,UtenteFK,MedicoFK,DiagnosticoFK")] Consultas consultas)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Data,Motivo,Estado,UtenteFK,MedicoFK,DiagnosticoFK")] Consultas consulta)
         {
-            if (id != consultas.Id)
+            if (id != consulta.Id)
             {
                 return NotFound();
+            }
+            //verifica se o id previamente guardado é igual ao devolvido após as mudanças
+            var previoGuardada = HttpContext.Session.GetInt32("ConsultaEditId");
+
+            if (previoGuardada == null)
+            {
+                ModelState.AddModelError("", "Sessão Expirou, passou de tempo");
+                return View(consulta);
+            }
+
+            if (previoGuardada != consulta.Id)
+            {
+                return RedirectToAction("Index");
             }
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(consultas);
+                    _context.Update(consulta);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ConsultasExists(consultas.Id))
+                    if (!ConsultasExists(consulta.Id))
                     {
                         return NotFound();
                     }
@@ -126,10 +141,10 @@ namespace Hospital.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DiagnosticoFK"] = new SelectList(_context.Diagnosticos, "Id", "Descricao", consultas.DiagnosticoFK);
-            ViewData["MedicoFK"] = new SelectList(_context.Medicos, "Id", "Email", consultas.MedicoFK);
-            ViewData["UtenteFK"] = new SelectList(_context.Utentes, "Id", "Email", consultas.UtenteFK);
-            return View(consultas);
+            ViewData["DiagnosticoFK"] = new SelectList(_context.Diagnosticos, "Id", "Descricao", consulta.DiagnosticoFK);
+            ViewData["MedicoFK"] = new SelectList(_context.Medicos, "Id", "Nome", consulta.MedicoFK);
+            ViewData["UtenteFK"] = new SelectList(_context.Utentes, "Id", "Nome", consulta.UtenteFK);
+            return View(consulta);
         }
 
         // GET: Consultas/Delete/5
@@ -140,17 +155,19 @@ namespace Hospital.Controllers
                 return NotFound();
             }
 
-            var consultas = await _context.Consultas
+            var consulta = await _context.Consultas
                 .Include(c => c.Diagnostico)
                 .Include(c => c.Medico)
                 .Include(c => c.Utente)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (consultas == null)
+            if (consulta == null)
             {
                 return NotFound();
             }
+            //guardar o id da consulta a ser apagada
+            HttpContext.Session.SetInt32("ConsultaDeleteId", consulta.Id);
 
-            return View(consultas);
+            return View(consulta);
         }
 
         // POST: Consultas/Delete/5
@@ -163,6 +180,16 @@ namespace Hospital.Controllers
                 return Problem("Entity set 'ApplicationDbContext.Consultas'  is null.");
             }
             var consultas = await _context.Consultas.FindAsync(id);
+
+            //consultar o id previamente guardado da consulta a apagar
+            var previoGuardado = HttpContext.Session.GetInt32("ConsultaDeleteId");
+            //verificar se o id da consulta a apagar previamente guardada é igual à atual
+            if (previoGuardado == null || (previoGuardado != consultas.Id))
+            {
+                ModelState.AddModelError("", "Sessão Expirou, passou de tempo");
+                return RedirectToAction("Index");
+            }
+
             if (consultas != null)
             {
                 _context.Consultas.Remove(consultas);

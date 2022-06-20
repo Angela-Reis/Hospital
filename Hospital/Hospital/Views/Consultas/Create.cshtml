@@ -1,55 +1,70 @@
 ﻿@model Hospital.Models.Consultas
 
 @{
-    ViewData["Title"] = "Create";
+	ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+<h1>Criar Nova</h1>
 
-<h4>Consultas</h4>
+<h4>Consulta</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Data" class="control-label"></label>
-                <input asp-for="Data" class="form-control" />
-                <span asp-validation-for="Data" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Motivo" class="control-label"></label>
-                <input asp-for="Motivo" class="form-control" />
-                <span asp-validation-for="Motivo" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Estado" class="control-label"></label>
-                <input asp-for="Estado" class="form-control" />
-                <span asp-validation-for="Estado" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UtenteFK" class="control-label"></label>
-                <select asp-for="UtenteFK" class ="form-control" asp-items="ViewBag.UtenteFK"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="MedicoFK" class="control-label"></label>
-                <select asp-for="MedicoFK" class ="form-control" asp-items="ViewBag.MedicoFK"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="DiagnosticoFK" class="control-label"></label>
-                <select asp-for="DiagnosticoFK" class ="form-control" asp-items="ViewBag.DiagnosticoFK"></select>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
+	<div class="col-md-4">
+		<form asp-action="Create">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+			<div class="form-group">
+				<label asp-for="Data" class="control-label"></label>
+				@*Limita o tempo entre 5 dias após o atual e 1 ano após o atual*@
+				<input asp-for="Data"
+					   min="@DateTime.Now.AddDays(5).ToString("yyyy-MM-ddThh:mm")"
+					   max="@DateTime.Now.AddYears(1).ToString("yyyy-MM-ddThh:mm")"
+					   class="form-control" />
+				<span asp-validation-for="Data" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="Motivo" class="control-label"></label>
+				<input asp-for="Motivo" class="form-control" />
+				<span asp-validation-for="Motivo" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="Estado" class="control-label"></label>
+				<input asp-for="Estado" class="form-control" />
+				<span asp-validation-for="Estado" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="UtenteFK" class="control-label"></label>
+				<select asp-for="UtenteFK" class="form-control" asp-items="ViewBag.UtenteFK">
+					@*Inicialmente selecionar Nul, disabled devido a ser necessario o utilizador selecionar um utente*@
+					<option disabled selected>Escolher Utente</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label asp-for="MedicoFK" class="control-label"></label>
+				<select asp-for="MedicoFK" class="form-control" asp-items="ViewBag.MedicoFK">
+					@*Inicialmente selecionar Null, disabled devido a ser necessario o utilizador selecionar um médico*@
+					<option disabled selected>Escolher Médico</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label asp-for="DiagnosticoFK" class="control-label"></label>
+				<select asp-for="DiagnosticoFK" class="form-control" asp-items="ViewBag.DiagnosticoFK">
+					@*Permitir que seja selecionado null, uma consulta não tem de ser relacionada com um diagnostico*@
+					<option selected value="" label="Nenhum"></option>
+				</select>
+			</div>
+			<div class="form-group">
+				<input type="submit" value="Create" class="btn btn-primary" />
+			</div>
+		</form>
+	</div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+	<a asp-action="Index">Voltar à Lista</a>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+	await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
 }
