@@ -22,7 +22,7 @@ namespace Hospital.Controllers
         // GET: Diagnosticos
         public async Task<IActionResult> Index()
         {
-              return View(await _context.Diagnosticos.ToListAsync());
+              return View(await _context.Diagnosticos.Include(d => d.ListaConsultas).ToListAsync());
         }
 
         // GET: Diagnosticos/Details/5
@@ -78,6 +78,10 @@ namespace Hospital.Controllers
             {
                 return NotFound();
             }
+
+            //guardar o id da especialidade a ser editada numa variavel de sessão
+            HttpContext.Session.SetInt32("EditDiagId", diagnosticos.Id);
+
             return View(diagnosticos);
         }
 
@@ -88,9 +92,23 @@ namespace Hospital.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Descricao,Estado")] Diagnosticos diagnosticos)
         {
+
             if (id != diagnosticos.Id)
             {
                 return NotFound();
+            }
+
+            var previoGuardada = HttpContext.Session.GetInt32("EditDiagId");
+            //verificar se o id é igual ao guardado anteriormente
+            if (previoGuardada == null)
+            {
+                ModelState.AddModelError("", "Sessão Expirou, passou de tempo");
+                return View(diagnosticos);
+            }
+
+            if (previoGuardada != diagnosticos.Id)
+            {
+                return RedirectToAction("Index");
             }
 
             if (ModelState.IsValid)
@@ -130,6 +148,7 @@ namespace Hospital.Controllers
             {
                 return NotFound();
             }
+            HttpContext.Session.SetInt32("DeleteDiagId", diagnosticos.Id);
 
             return View(diagnosticos);
         }
@@ -139,16 +158,30 @@ namespace Hospital.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+             
             if (_context.Diagnosticos == null)
             {
                 return Problem("Entity set 'ApplicationDbContext.Diagnosticos'  is null.");
             }
             var diagnosticos = await _context.Diagnosticos.FindAsync(id);
+
+            //Verificar se o valor do id não foi alterado
+            var previoGuardada = HttpContext.Session.GetInt32("DeleteDiagId");
+            if (previoGuardada == null)
+            {
+                ModelState.AddModelError("", "Sessão Expirou, passou de tempo");
+                return View(diagnosticos);
+            }
+            if (previoGuardada != diagnosticos.Id)
+            {
+                return RedirectToAction("Index");
+            }
+           
+            
             if (diagnosticos != null)
             {
                 _context.Diagnosticos.Remove(diagnosticos);
             }
-            
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
