@@ -14,6 +14,7 @@ namespace Hospital.Models
         /// Descricao da Prescrição
         /// </summary>
         [Required(ErrorMessage = "A {0} é de preenchimento obrigatório")]
+        [StringLength(1000, ErrorMessage = "O {0} não pode ter mais do que {1} caracteres")]
         [Display(Name = "Descrição")]
         public string Descricao { get; set; }
 

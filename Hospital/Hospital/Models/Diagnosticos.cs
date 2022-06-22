@@ -21,7 +21,7 @@ namespace Hospital.Models
         [Display(Name = "Descrição")]
         [Required(ErrorMessage = "A {0} é de preenchimento obrigatório")]
         [RegularExpression("[A-Za-z ]+", ErrorMessage = "No {0} só são aceites letras")]
-        [StringLength(1000, ErrorMessage = "O {0} não pode ter mais do que {1} caracteres.")]
+        [StringLength(1000, ErrorMessage = "O {0} não pode ter mais do que {1} caracteres")]
         public string Descricao { get; set; }
 
 
