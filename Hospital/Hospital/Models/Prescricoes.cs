@@ -6,27 +6,28 @@ namespace Hospital.Models
     public class Prescricoes
     {
         /// <summary>
-        /// PK da tabela Prescicao
+        /// PK da tabela Prescrição
         /// </summary>
         public int Id { get; set; }
 
         /// <summary>
-        /// Descricao da Prescicao
+        /// Descricao da Prescrição
         /// </summary>
         [Required(ErrorMessage = "A {0} é de preenchimento obrigatório")]
         [Display(Name = "Descrição")]
         public string Descricao { get; set; }
 
         /// <summary>
-        /// Data em que a Prescicao foi efetuada
+        /// Data em que a Prescrição foi efetuada
         /// </summary>
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         [DataType(DataType.Date)]
         public DateTime Data { get; set; }
-        
+
         /// <summary>
-        /// Estado da prescicao se está ativa ou desativa
+        /// Estado da Prescrição se está ativa ou desativa
         /// </summary>
+        [Display(Name = "Prescrição Válida")]
         public bool Estado { get; set; }
 
 

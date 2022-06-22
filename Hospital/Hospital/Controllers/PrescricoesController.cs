@@ -83,6 +83,8 @@ namespace Hospital.Controllers
                 return NotFound();
             }
             ViewData["DiagnosticoFK"] = new SelectList(_context.Diagnosticos, "Id", "Descricao", prescricoes.DiagnosticoFK);
+            //guardar validade de sessão com o id
+            HttpContext.Session.SetInt32("EditPrescId", prescricoes.Id);
             return View(prescricoes);
         }
 
@@ -97,6 +99,20 @@ namespace Hospital.Controllers
             {
                 return NotFound();
             }
+
+            var previoGuardada = HttpContext.Session.GetInt32("EditPrescId");
+            //verificar se o id é igual ao guardado anteriormente
+            if (previoGuardada == null)
+            {
+                ModelState.AddModelError("", "Sessão Expirou, passou de tempo");
+                return View(prescricoes);
+            }
+
+            if (previoGuardada != prescricoes.Id)
+            {
+                return RedirectToAction("Index");
+            }
+
 
             if (ModelState.IsValid)
             {
@@ -137,6 +153,7 @@ namespace Hospital.Controllers
             {
                 return NotFound();
             }
+            HttpContext.Session.SetInt32("DeletePrescId", prescricoes.Id);
 
             return View(prescricoes);
         }
@@ -151,6 +168,21 @@ namespace Hospital.Controllers
                 return Problem("Entity set 'ApplicationDbContext.Prescricoes'  is null.");
             }
             var prescricoes = await _context.Prescricoes.FindAsync(id);
+
+            //verificar se o id é igual ao guardado anteriormente na variável de sessão
+            var previoGuardada = HttpContext.Session.GetInt32("DeletePrescId");
+            if (previoGuardada == null)
+            {
+                ModelState.AddModelError("", "Sessão Expirou, passou de tempo");
+                return View(prescricoes);
+            }
+
+            if (previoGuardada != prescricoes.Id)
+            {
+                return RedirectToAction("Index");
+            }
+
+
             if (prescricoes != null)
             {
                 _context.Prescricoes.Remove(prescricoes);
