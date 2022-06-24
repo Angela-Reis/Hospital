@@ -57,9 +57,19 @@ namespace Hospital.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Valor,Descricao,Estado,DataEfetuado,Metodo,ConsultaFK")] Pagamentos pagamentos)
+        public async Task<IActionResult> Create([Bind("Id,AuxValor,Valor,Descricao,Estado,DataEfetuado,Metodo,ConsultaFK")] Pagamentos pagamentos)
         {
-            if (ModelState.IsValid)
+            // transferir os dados de AuxValor para valor
+            pagamentos.Valor = Convert.ToDecimal(pagamentos.AuxValor.Replace('.', ','));
+            //se o modelo for valido,  no entanto, o estado de pagamento
+            //ou estiver efetuado sem a data e método
+            //ou não estiver efetuado, no entanto, ter data ou método
+            //os dados não estão corretos
+            if (ModelState.IsValid &&
+                !(  pagamentos.Estado && (pagamentos.DataEfetuado is null || pagamentos.Metodo is null) ||
+                    !pagamentos.Estado && (pagamentos.DataEfetuado is not null || pagamentos.Metodo is not null)
+                )
+            )
             {
                 _context.Add(pagamentos);
                 await _context.SaveChangesAsync();
@@ -82,7 +92,10 @@ namespace Hospital.Controllers
             {
                 return NotFound();
             }
+            pagamentos.AuxValor = pagamentos.Valor.ToString();
             ViewData["ConsultaFK"] = new SelectList(_context.Consultas, "Id", "Motivo", pagamentos.ConsultaFK);
+            //variavel de sessão que guarda o id da consulta a ser editada
+            HttpContext.Session.SetInt32("PagamentosEditId", pagamentos.Id);
             return View(pagamentos);
         }
 
@@ -91,15 +104,31 @@ namespace Hospital.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Valor,Descricao,Estado,DataEfetuado,Metodo,ConsultaFK")] Pagamentos pagamentos)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,AuxValor,Valor,Descricao,Estado,DataEfetuado,Metodo,ConsultaFK")] Pagamentos pagamentos)
         {
             if (id != pagamentos.Id)
             {
                 return NotFound();
             }
 
+            //verifica se o id previamente guardado é igual ao devolvido após as mudanças
+            var previoGuardada = HttpContext.Session.GetInt32("PagamentosEditId");
+
+            if (previoGuardada == null)
+            {
+                ModelState.AddModelError("", "Sessão Expirou, passou de tempo");
+                return View(pagamentos);
+            }
+
+            if (previoGuardada != pagamentos.Id)
+            {
+                return RedirectToAction("Index");
+            }
+
             if (ModelState.IsValid)
             {
+                // transferir os dados de AuxValor para valor
+                pagamentos.Valor = Convert.ToDecimal(pagamentos.AuxValor.Replace('.', ','));
                 try
                 {
                     _context.Update(pagamentos);
@@ -137,7 +166,8 @@ namespace Hospital.Controllers
             {
                 return NotFound();
             }
-
+            //variavel de sessão que guarda o id da consulta a ser editada
+            HttpContext.Session.SetInt32("PagamentosEditId", pagamentos.Id);
             return View(pagamentos);
         }
 
@@ -150,19 +180,34 @@ namespace Hospital.Controllers
             {
                 return Problem("Entity set 'ApplicationDbContext.Pagamentos'  is null.");
             }
+            //verifica se o id previamente guardado é igual ao devolvido
+            var previoGuardada = HttpContext.Session.GetInt32("PagamentosEditId");
+
+
             var pagamentos = await _context.Pagamentos.FindAsync(id);
+            if (previoGuardada == null)
+            {
+                ModelState.AddModelError("", "Sessão Expirou, passou de tempo");
+                return View(pagamentos);
+            }
+
+            if (previoGuardada != id)
+            {
+                return RedirectToAction("Index");
+            }
+
             if (pagamentos != null)
             {
                 _context.Pagamentos.Remove(pagamentos);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool PagamentosExists(int id)
         {
-          return _context.Pagamentos.Any(e => e.Id == id);
+            return _context.Pagamentos.Any(e => e.Id == id);
         }
     }
 }
