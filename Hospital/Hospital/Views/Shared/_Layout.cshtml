@@ -32,21 +32,25 @@
 						<li class="nav-item">
 							<a class="nav-link text-dark" asp-area="" asp-controller="Especialidades" asp-action="Index">Especialidades</a>
 						</li>
-						<li class="nav-item">
-							<a class="nav-link text-dark" asp-area="" asp-controller="Utentes" asp-action="Index">Utentes</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link text-dark" asp-area="" asp-controller="Consultas" asp-action="Index">Consultas</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link text-dark" asp-area="" asp-controller="Pagamentos" asp-action="Index">Pagamentos</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link text-dark" asp-area="" asp-controller="Diagnosticos" asp-action="Index">Diagnostico</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link text-dark" asp-area="" asp-controller="Prescricoes" asp-action="Index">Prescricoes</a>
-						</li>
+                        @if (User.Identity.IsAuthenticated){
+                            <text>
+						        <li class="nav-item">
+							        <a class="nav-link text-dark" asp-area="" asp-controller="Utentes" asp-action="Index">Utentes</a>
+						        </li>
+						        <li class="nav-item">
+							        <a class="nav-link text-dark" asp-area="" asp-controller="Consultas" asp-action="Index">Consultas</a>
+						        </li>
+						        <li class="nav-item">
+							        <a class="nav-link text-dark" asp-area="" asp-controller="Pagamentos" asp-action="Index">Pagamentos</a>
+						        </li>
+						        <li class="nav-item">
+							        <a class="nav-link text-dark" asp-area="" asp-controller="Diagnosticos" asp-action="Index">Diagnostico</a>
+						        </li>
+						        <li class="nav-item">
+							        <a class="nav-link text-dark" asp-area="" asp-controller="Prescricoes" asp-action="Index">Prescricoes</a>
+						        </li>
+                        	</text>
+                        }
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>

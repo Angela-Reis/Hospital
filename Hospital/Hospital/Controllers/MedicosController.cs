@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Hospital.Data;
 using Hospital.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Hospital.Controllers
 {
+    [Authorize]
     public class MedicosController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -22,6 +24,7 @@ namespace Hospital.Controllers
         }
 
         // GET: Medicos
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             //passar para o index a lista de Especialidades
@@ -29,6 +32,7 @@ namespace Hospital.Controllers
         }
 
         // GET: Medicos/Details/5
+        [AllowAnonymous]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Medicos == null)

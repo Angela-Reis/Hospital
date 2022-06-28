@@ -25,15 +25,18 @@
 		@*Lista os medicos da especialidade*@
 		@foreach (var item in Model.ListaMedicos)
 		{
-			<dd class="col-sm-2">
-				@Html.DisplayFor(model => item.NumCedulaProf)
-			</dd>
 			<dd class="col-sm-10">
-				@Html.DisplayFor(model => item.Nome)
+				<a href="@Url.Action("Details", "Medicos", new {id = @item.Id})" class="elements">
+					@Html.DisplayFor(model => item.NumCedulaProf) - @Html.DisplayFor(model => item.Nome)
+				</a>
 			</dd>
 		}
 	</dl>
-
-	<a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-	<a asp-action="Index">Back to List</a>
+	@if (User.Identity.IsAuthenticated)
+	{
+		<text>
+			<a asp-action="Edit" asp-route-id="@Model?.Id">Editar</a> |
+		</text>
+	}
+	<a asp-action="Index">Voltar à Lista</a>
 </div>

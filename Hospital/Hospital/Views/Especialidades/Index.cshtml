@@ -1,42 +1,49 @@
 ﻿@model IEnumerable<Hospital.Models.Especialidades>
 
 @{
-    ViewData["Title"] = "Index";
+	ViewData["Title"] = "Index";
 }
 
 <h1>Index das Especialidades</h1>
-
-<p>
-    <a asp-action="Create">Criar novo</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Nome)
-            </th>
-            <th>
-                Número de Medicos
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nome)
-            </td>
-            <td>
-                @*Mostra número de médicos da Especialidade*@
-                 @item.ListaMedicos.Count()
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Detalhes</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Apagar</a>
-            </td>
-        </tr>
+@if (User.Identity.IsAuthenticated){
+	<p>
+		<a asp-action="Create">Criar novo</a>
+	</p>
 }
-    </tbody>
+<table class="table">
+	<thead>
+		<tr>
+			<th>
+				@Html.DisplayNameFor(model => model.Nome)
+			</th>
+			<th>
+				Número de Medicos
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model) {
+			<tr>
+				<td>
+					@Html.DisplayFor(modelItem => item.Nome)
+				</td>
+				<td>
+					@*Mostra número de médicos da Especialidade*@
+					@item.ListaMedicos.Count()
+				</td>
+				<td>
+					@if (User.Identity.IsAuthenticated){
+						<text>
+							<a asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
+						</text>
+					}
+							<a asp-action="Details" asp-route-id="@item.Id">Detalhes</a> |
+					@if (User.Identity.IsAuthenticated){
+							<a asp-action="Delete" asp-route-id="@item.Id">Apagar</a>
+					}
+				</td>
+			</tr>
+		}
+	</tbody>
 </table>
