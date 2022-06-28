@@ -127,7 +127,8 @@ namespace Hospital.Data
                 new { ListaMedicosId = 5, ListaEspecialidadesId = 2 },
                 new { ListaMedicosId = 6, ListaEspecialidadesId = 1 },
                 new { ListaMedicosId = 6, ListaEspecialidadesId = 2 },
-                new { ListaMedicosId = 7, ListaEspecialidadesId = 1 }
+                new { ListaMedicosId = 7, ListaEspecialidadesId = 1 },
+                new { ListaMedicosId = 1, ListaEspecialidadesId = 8 }
             );
 
             //cria seed dos Utentes
@@ -187,6 +188,193 @@ namespace Hospital.Data
                     Foto = "555555555.png",
                     DataNascimento = DateTime.ParseExact("12/04/1990", "dd/MM/yyyy", CultureInfo.InvariantCulture),
                     Sexo = "F"
+                }
+            );
+
+            //cria seed dos Diagnosticos-------------------------------------------------------------
+            modelBuilder.Entity<Diagnosticos>().HasData(
+                new Diagnosticos { Id = 1, Titulo = "Asma Brônquica", Descricao = "", Estado = "C" },
+                new Diagnosticos { Id = 2, Titulo = "Aterosclerose", Descricao = "", Estado = "T" },
+                new Diagnosticos { Id = 3, Titulo = "Gripe", Descricao = "", Estado = "F" }
+             );
+
+            //cria seed das Consultas-------------------------------------------------------------------
+            modelBuilder.Entity<Consultas>().HasData(
+                new Consultas
+                {
+                    Id = 1,
+                    Data = DateTime.ParseExact("19/06/2022 09:30", "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture),
+                    Motivo = "Dificuldade de Respiração",
+                    Estado = "F",
+                    MedicoFK = 1,
+                    UtenteFK = 1,
+                    DiagnosticoFK = 1
+                }, new Consultas
+                {
+                    Id = 2,
+                    Data = DateTime.ParseExact("25/06/2022 10:30", "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture),
+                    Motivo = "Recetemente tive dores no peito e senti-me Fadigado",
+                    Estado = "F",
+                    MedicoFK = 2,
+                    UtenteFK = 4,
+                    DiagnosticoFK = 2
+                }, new Consultas
+                {
+                    Id = 3,
+                    Data = DateTime.ParseExact("26/06/2022 09:30", "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture),
+                    Motivo = "Check up após Consulta anterior relativa a Dificuldade de Respiração",
+                    Estado = "F",
+                    MedicoFK = 1,
+                    UtenteFK = 1,
+                    DiagnosticoFK = 1
+                }, new Consultas
+                {
+                    Id = 4,
+                    Data = DateTime.ParseExact("26/06/2022 16:45", "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture),
+                    Motivo = "Febre Alta",
+                    Estado = "F",
+                    MedicoFK = 2,
+                    UtenteFK = 5,
+                    DiagnosticoFK = 3
+                }, new Consultas
+                {
+                    Id = 5,
+                    Data = DateTime.ParseExact("01/07/2022 11:00", "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture),
+                    Motivo = "Check up Anual",
+                    Estado = "F",
+                    MedicoFK = 1,
+                    UtenteFK = 4,
+                    DiagnosticoFK = null
+                }, new Consultas
+                {
+                    Id = 6,
+                    Data = DateTime.ParseExact("01/07/2022 17:15", "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture),
+                    Motivo = "Check up Anual",
+                    Estado = "C",
+                    MedicoFK = 1,
+                    UtenteFK = 5,
+                    DiagnosticoFK = null
+                }, new Consultas
+                {
+                    Id = 7,
+                    Data = DateTime.ParseExact("29/07/2022 09:30", "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture),
+                    Motivo = "Dores nos Pulsos",
+                    Estado = "M",
+                    MedicoFK = 6,
+                    UtenteFK = 3,
+                    DiagnosticoFK = null
+                }, new Consultas
+                {
+                    Id = 8,
+                    Data = DateTime.ParseExact("30/07/2022 09:30", "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture),
+                    Motivo = "Check up Anual",
+                    Estado = "P",
+                    MedicoFK = 2,
+                    UtenteFK = 2,
+                    DiagnosticoFK = null
+                }
+             );
+
+            //cria seed das Prescricoes--------------------------------------------------------------------------------------
+            modelBuilder.Entity<Prescricoes>().HasData(
+                new Prescricoes
+                {
+                    Id = 1,
+                    Descricao = "Beclometasona quando for necessário, mínimo a cada 6 horas",
+                    Estado = false,
+                    DiagnosticoFK = 1,
+                    Data = DateTime.ParseExact("19/06/2022", "dd/MM/yyyy", CultureInfo.InvariantCulture)
+                }, new Prescricoes
+                {
+                    Id = 2,
+                    Descricao = "Estatinas à noite",
+                    Estado = true,
+                    DiagnosticoFK = 2,
+                    Data = DateTime.ParseExact("25/06/2022", "dd/MM/yyyy", CultureInfo.InvariantCulture)
+                }, new Prescricoes
+                {
+                    Id = 3,
+                    Descricao = "Formoterol duas vezes ao dia, de manhã e de noite",
+                    Estado = true,
+                    DiagnosticoFK = 1,
+                    Data = DateTime.ParseExact("26/06/2022", "dd/MM/yyyy", CultureInfo.InvariantCulture)
+                }
+            );
+
+            //cria seed dos Pagamentos
+            modelBuilder.Entity<Pagamentos>().HasData(
+                new Pagamentos
+                {
+                    Id = 1,
+                    Descricao = "Taxa Moderadora",
+                    Valor = 12.5M,
+                    Estado = true,
+                    Metodo = "MB",
+                    ConsultaFK = 1,
+                    DataEfetuado = DateTime.ParseExact("19/06/2022", "dd/MM/yyyy", CultureInfo.InvariantCulture)
+                }, new Pagamentos
+                {
+                    Id = 2,
+                    Descricao = "Raio-X",
+                    Valor = 15,
+                    Estado = true,
+                    Metodo = "MB",
+                    ConsultaFK = 1,
+                    DataEfetuado = DateTime.ParseExact("25/06/2022", "dd/MM/yyyy", CultureInfo.InvariantCulture)
+                }, new Pagamentos
+                {
+                    Id = 3,
+                    Descricao = "Taxa Moderadora",
+                    Valor = 12.5M,
+                    Estado = true,
+                    Metodo = "D",
+                    ConsultaFK = 2,
+                    DataEfetuado = DateTime.ParseExact("25/08/2022", "dd/MM/yyyy", CultureInfo.InvariantCulture)
+                }, new Pagamentos
+                {
+                    Id = 4,
+                    Descricao = "Exames Laboratoriais",
+                    Valor = 35.62M,
+                    Estado = true,
+                    Metodo = "D",
+                    ConsultaFK = 4,
+                    DataEfetuado = DateTime.ParseExact("25/08/2022", "dd/MM/yyyy", CultureInfo.InvariantCulture)
+                }, new Pagamentos
+                {
+                    Id = 5,
+                    Descricao = "Taxa Moderadora",
+                    Valor = 12.5M,
+                    Estado = false,
+                    Metodo = null,
+                    ConsultaFK = 3,
+                    DataEfetuado = null
+                }, new Pagamentos
+                {
+                    Id = 6,
+                    Descricao = "Taxa Moderadora",
+                    Valor = 12.5M,
+                    Estado = false,
+                    Metodo = null,
+                    ConsultaFK = 3,
+                    DataEfetuado = null
+                }, new Pagamentos
+                {
+                    Id = 7,
+                    Descricao = "Taxa Moderadora",
+                    Valor = 12.5M,
+                    Estado = false,
+                    Metodo = null,
+                    ConsultaFK = 3,
+                    DataEfetuado = null
+                }, new Pagamentos
+                {
+                    Id = 8,
+                    Descricao = "Taxa Moderadora",
+                    Valor = 12.5M,
+                    Estado = false,
+                    Metodo = null,
+                    ConsultaFK = 3,
+                    DataEfetuado = null
                 }
             );
         }
