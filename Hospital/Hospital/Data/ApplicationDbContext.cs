@@ -4,6 +4,7 @@ using Hospital.Models;
 using System.Globalization;
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace Hospital.Data
 {
@@ -39,7 +40,6 @@ namespace Hospital.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
             // importa a execução previa do método
             base.OnModelCreating(modelBuilder);
 
@@ -48,6 +48,226 @@ namespace Hospital.Data
                new IdentityRole { Id = "a", Name = "Administrativo", NormalizedName = "ADMINISTRATIVO" },
                new IdentityRole { Id = "m", Name = "Medico", NormalizedName = "MEDICO" },
                new IdentityRole { Id = "u", Name = "Utente", NormalizedName = "UTENTE" }
+            );
+
+            //a hasher to hash the password before seeding the user to the db
+            var hasher = new PasswordHasher<IdentityUser>();
+
+            //Seed Contas Admin
+            modelBuilder.Entity<UtilizadorApp>().HasData(
+                new UtilizadorApp
+                {
+                    DataRegistro = DateTime.Now,
+                    Nome = "Admin",
+                    Id = "a370779b-8777-4d3b-a96c-7a94d217e355",
+                    UserName = "admin@admin.com",
+                    Email = "admin@admin.com",
+                    NormalizedUserName = "admin@admin.com".ToUpper(),
+                    NormalizedEmail = "admin@admin.com".ToUpper(),
+                    PasswordHash = hasher.HashPassword(null, "Admin1!"),
+                    EmailConfirmed = true,
+                    LockoutEnabled = true
+                },
+                new UtilizadorApp
+                {
+                    DataRegistro = DateTime.Now,
+                    Nome = "Admin2",
+                    Id = "93b9ebd2-3f4d-4009-8d8b-3a3404f85628",
+                    UserName = "admin2@admin.com",
+                    Email = "admin2@admin.com",
+                    NormalizedUserName = "admin2@admin.com".ToUpper(),
+                    NormalizedEmail = "admin2@admin.com".ToUpper(),
+                    PasswordHash = hasher.HashPassword(null, "Admin2!"),
+                    EmailConfirmed = true,
+                    LockoutEnabled = true
+                }
+            );
+
+
+            //seed contas médicos
+            modelBuilder.Entity<UtilizadorApp>().HasData(
+                new UtilizadorApp
+                {
+                    DataRegistro = DateTime.Now,
+                    Nome = "Natália Cardoso",
+                    Email = "cardoso@email.com",
+                    UserName = "cardoso@email.com",
+                    NormalizedEmail = "cardoso@email.com".ToUpper(),
+                    NormalizedUserName = "cardoso@email.com".ToUpper(),
+                    Id = "388c89b7-046e-414a-8212-1cced6e1aea1",
+                    PasswordHash = hasher.HashPassword(null, "Medico1!"),
+                    EmailConfirmed = true,
+                    LockoutEnabled = true
+                }, new UtilizadorApp
+                {
+                    DataRegistro = DateTime.Now,
+                    Nome = "Luiz Fernando da Paz",
+                    Email = "Luizpaz59181@email.com",
+                    UserName = "Luizpaz59181@email.com",
+                    NormalizedEmail = "Luizpaz59181@email.com".ToUpper(),
+                    NormalizedUserName = "Luizpaz59181@email.com".ToUpper(),
+                    Id = "b092ad4f-06b8-427f-bc38-cab75e79fc7d",
+                    PasswordHash = hasher.HashPassword(null, "Medico1!"),
+                    EmailConfirmed = true,
+                    LockoutEnabled = true
+                }, new UtilizadorApp
+                {
+                    DataRegistro = DateTime.Now,
+                    Nome = "João Henriques",
+                    Email = "Henriques82648@email.com",
+                    UserName = "João Henriques",
+                    NormalizedEmail = "Henriques82648@email.com".ToUpper(),
+                    NormalizedUserName = "João Henriques".ToUpper(),
+                    Id = "0c88c53b-f18e-494e-88ff-1e9c2360f310",
+                    PasswordHash = hasher.HashPassword(null, "Medico1!"),
+                    EmailConfirmed = true,
+                    LockoutEnabled = true
+                }, new UtilizadorApp
+                {
+                    DataRegistro = DateTime.Now,
+                    Nome = "Marcelo Ferreira",
+                    Email = "MarceloFerreira@email.com",
+                    UserName = "MarceloFerreira@email.com",
+                    NormalizedEmail = "MarceloFerreira@email.com".ToUpper(),
+                    NormalizedUserName = "MarceloFerreira@email.com".ToUpper(),
+                    Id = "2db0257a-446d-4886-b46e-3f6246610080",
+                    PasswordHash = hasher.HashPassword(null, "Medico1!"),
+                    EmailConfirmed = true,
+                    LockoutEnabled = true
+                }, new UtilizadorApp
+                {
+                    DataRegistro = DateTime.Now,
+                    Nome = "Gabriel Henriques",
+                    Email = "GabHenriques@email.com",
+                    UserName = "GabHenriques@email.com",
+                    NormalizedEmail = "GabHenriques@email.com".ToUpper(),
+                    NormalizedUserName = "GabHenriques@email.com".ToUpper(),
+                    Id = "773922b7-74c3-4e4c-8097-fd7468ec8315",
+                    PasswordHash = hasher.HashPassword(null, "Medico1!"),
+                    EmailConfirmed = true,
+                    LockoutEnabled = true
+                }, new UtilizadorApp
+                {
+                    DataRegistro = DateTime.Now,
+                    Nome = "David Carvalho",
+                    Email = "Carvalho69791@email.com",
+                    UserName = "Carvalho69791@email.com",
+                    NormalizedEmail = "Carvalho69791@email.com".ToUpper(),
+                    NormalizedUserName = "Carvalho69791@email.com".ToUpper(),
+                    Id = "db9792d7-d293-49b5-be8d-03ccf60d0e33",
+                    PasswordHash = hasher.HashPassword(null, "Medico1!"),
+                    EmailConfirmed = true,
+                    LockoutEnabled = true
+                }, new UtilizadorApp
+                {
+                    DataRegistro = DateTime.Now,
+                    Nome = "Carolina Nogueira",
+                    Email = "Nogueira@email.com",
+                    UserName = "Nogueira@email.com",
+                    NormalizedEmail = "Nogueira@email.com".ToUpper(),
+                    NormalizedUserName = "Nogueira@email.com".ToUpper(),
+                    Id = "e0585d26-607c-46d3-9eea-9c1c2708c7e1",
+                    PasswordHash = hasher.HashPassword(null, "Medico1!"),
+                    EmailConfirmed = true,
+                    LockoutEnabled = true
+                }, new UtilizadorApp
+                {
+                    DataRegistro = DateTime.Now,
+                    Nome = "João Fernando",
+                    Email = "Fernando60603@email.com",
+                    UserName = "Fernando60603@email.com",
+                    NormalizedEmail = "Fernando60603@email.com".ToUpper(),
+                    NormalizedUserName = "Fernando60603@email.com".ToUpper(),
+                    Id = "10450067-5f19-44c7-8be1-388e8a6bdb30",
+                    PasswordHash = hasher.HashPassword(null, "Medico1!"),
+                    EmailConfirmed = true,
+                    LockoutEnabled = true
+                }
+            );
+
+            //seed contas utilizadores
+            modelBuilder.Entity<UtilizadorApp>().HasData(
+                new UtilizadorApp
+                {
+                    DataRegistro = DateTime.Now,
+                    Nome = "Isabela Bentes Teixeira",
+                    Email = "teixeira@email.com",
+                    UserName = "teixeira@email.com",
+                    NormalizedEmail = "teixeira@email.com".ToUpper(),
+                    NormalizedUserName = "teixeira@email.com".ToUpper(),
+                    Id = "29f5f36e-5f11-42a2-b0b8-de7741c7de16",
+                    PasswordHash = hasher.HashPassword(null, "Utente1!"),
+                    EmailConfirmed = true,
+                    LockoutEnabled = true
+                }, new UtilizadorApp
+                {
+                    DataRegistro = DateTime.Now,
+                    Nome = "Leonardo Teves Dinis",
+                    Email = "leonardo@email.com",
+                    UserName = "leonardo@email.com",
+                    NormalizedEmail = "leonardo@email.com".ToUpper(),
+                    NormalizedUserName = "leonardo@email.com".ToUpper(),
+                    Id = "a91d6e50-ec7a-442d-9278-4567dc61a0aa",
+                    PasswordHash = hasher.HashPassword(null, "Utente1!"),
+                    EmailConfirmed = true,
+                    LockoutEnabled = true
+                }, new UtilizadorApp
+                {
+                    DataRegistro = DateTime.Now,
+                    Nome = "Anabela Calçada Henriques Aveiro",
+                    Email = "belaHenriques@email.com",
+                    UserName = "belaHenriques@email.com",
+                    NormalizedEmail = "belaHenriques@email.com".ToUpper(),
+                    NormalizedUserName = "belaHenriques@email.com".ToUpper(),
+                    Id = "18d7e29d-408f-42d7-9a27-ecc5d034d157",
+                    PasswordHash = hasher.HashPassword(null, "Utente1!"),
+                    EmailConfirmed = true,
+                    LockoutEnabled = true
+                }, new UtilizadorApp
+                {
+                    DataRegistro = DateTime.Now,
+                    Nome = "João Celso Oliveira",
+                    Email = "joaocelso@email.com",
+                    UserName = "joaocelso@email.com",
+                    NormalizedEmail = "joaocelso@email.com".ToUpper(),
+                    NormalizedUserName = "joaocelso@email.com".ToUpper(),
+                    Id = "5db04ccb-3be8-452f-b381-47bd2277fdca",
+                    PasswordHash = hasher.HashPassword(null, "Utente1!"),
+                    EmailConfirmed = true,
+                    LockoutEnabled = true
+                }, new UtilizadorApp
+                {
+                    DataRegistro = DateTime.Now,
+                    Nome = "Maria Inês Silva Henriques",
+                    Email = "ineshenriques@email.com",
+                    UserName = "ineshenriques@email.com",
+                    NormalizedEmail = "ineshenriques@email.com".ToUpper(),
+                    NormalizedUserName = "ineshenriques@email.com".ToUpper(),
+                    Id = "db43e582-e359-421d-9192-1d3ad1a57737",
+                    PasswordHash = hasher.HashPassword(null, "Utente1!"),
+                    EmailConfirmed = true,
+                    LockoutEnabled = true
+                }
+            );
+
+            //Seed Roles das contas
+            modelBuilder.Entity<IdentityUserRole<string>>().HasData(
+                new IdentityUserRole<string> { RoleId = "a", UserId = "a370779b-8777-4d3b-a96c-7a94d217e355" },
+                new IdentityUserRole<string> { RoleId = "a", UserId = "93b9ebd2-3f4d-4009-8d8b-3a3404f85628" },
+                new IdentityUserRole<string> { RoleId = "m", UserId = "388c89b7-046e-414a-8212-1cced6e1aea1" },
+                new IdentityUserRole<string> { RoleId = "m", UserId = "b092ad4f-06b8-427f-bc38-cab75e79fc7d" },
+                new IdentityUserRole<string> { RoleId = "m", UserId = "0c88c53b-f18e-494e-88ff-1e9c2360f310" },
+                new IdentityUserRole<string> { RoleId = "m", UserId = "2db0257a-446d-4886-b46e-3f6246610080" },
+                new IdentityUserRole<string> { RoleId = "m", UserId = "773922b7-74c3-4e4c-8097-fd7468ec8315" },
+                new IdentityUserRole<string> { RoleId = "m", UserId = "db9792d7-d293-49b5-be8d-03ccf60d0e33" },
+                new IdentityUserRole<string> { RoleId = "m", UserId = "e0585d26-607c-46d3-9eea-9c1c2708c7e1" },
+                new IdentityUserRole<string> { RoleId = "m", UserId = "10450067-5f19-44c7-8be1-388e8a6bdb30" },
+                new IdentityUserRole<string> { RoleId = "u", UserId = "29f5f36e-5f11-42a2-b0b8-de7741c7de16" },
+                new IdentityUserRole<string> { RoleId = "u", UserId = "a91d6e50-ec7a-442d-9278-4567dc61a0aa" },
+                new IdentityUserRole<string> { RoleId = "u", UserId = "18d7e29d-408f-42d7-9a27-ecc5d034d157" },
+                new IdentityUserRole<string> { RoleId = "u", UserId = "5db04ccb-3be8-452f-b381-47bd2277fdca" },
+                new IdentityUserRole<string> { RoleId = "u", UserId = "db43e582-e359-421d-9192-1d3ad1a57737" }
+
             );
 
             // cria a seed das Especialidades
@@ -62,6 +282,7 @@ namespace Hospital.Data
                new Especialidades { Id = 8, Nome = "Pneumologia" }
             );
 
+
             // cria a seed dos Medicos
             modelBuilder.Entity<Medicos>().HasData(
                 new Medicos
@@ -73,6 +294,7 @@ namespace Hospital.Data
                     NumCedulaProf = "45485",
                     Foto = "45485.png",
                     DataNascimento = DateTime.ParseExact("04/04/1975", "dd/MM/yyyy", CultureInfo.InvariantCulture),
+                    IdUtilizador = "388c89b7-046e-414a-8212-1cced6e1aea1"
                 },
                 new Medicos
                 {
@@ -83,6 +305,7 @@ namespace Hospital.Data
                     NumCedulaProf = "59181",
                     Foto = "semFoto.png",
                     DataNascimento = DateTime.ParseExact("17/02/1971", "dd/MM/yyyy", CultureInfo.InvariantCulture),
+                    IdUtilizador = "b092ad4f-06b8-427f-bc38-cab75e79fc7d"
                 },
                 new Medicos
                 {
@@ -93,6 +316,7 @@ namespace Hospital.Data
                     NumCedulaProf = "72648",
                     Foto = "72648.png",
                     DataNascimento = DateTime.ParseExact("17/04/1978", "dd/MM/yyyy", CultureInfo.InvariantCulture),
+                    IdUtilizador = "0c88c53b-f18e-494e-88ff-1e9c2360f310"
                 },
                 new Medicos
                 {
@@ -103,6 +327,7 @@ namespace Hospital.Data
                     NumCedulaProf = "40603",
                     Foto = "semFoto.png",
                     DataNascimento = DateTime.ParseExact("04/06/1969", "dd/MM/yyyy", CultureInfo.InvariantCulture),
+                    IdUtilizador = "2db0257a-446d-4886-b46e-3f6246610080"
                 },
                 new Medicos
                 {
@@ -113,6 +338,7 @@ namespace Hospital.Data
                     NumCedulaProf = "45485",
                     Foto = "semFoto.png",
                     DataNascimento = DateTime.ParseExact("04/04/1975", "dd/MM/yyyy", CultureInfo.InvariantCulture),
+                    IdUtilizador = "773922b7-74c3-4e4c-8097-fd7468ec8315"
                 },
                 new Medicos
                 {
@@ -123,6 +349,7 @@ namespace Hospital.Data
                     NumCedulaProf = "69791",
                     Foto = "semFoto.png",
                     DataNascimento = DateTime.ParseExact("10/02/1974", "dd/MM/yyyy", CultureInfo.InvariantCulture),
+                    IdUtilizador = "db9792d7-d293-49b5-be8d-03ccf60d0e33"
                 },
                 new Medicos
                 {
@@ -133,6 +360,7 @@ namespace Hospital.Data
                     NumCedulaProf = "82666",
                     Foto = "semFoto.png",
                     DataNascimento = DateTime.ParseExact("17/04/1981", "dd/MM/yyyy", CultureInfo.InvariantCulture),
+                    IdUtilizador = "e0585d26-607c-46d3-9eea-9c1c2708c7e1"
                 },
                 new Medicos
                 {
@@ -143,8 +371,10 @@ namespace Hospital.Data
                     NumCedulaProf = "60603",
                     Foto = "60603.png",
                     DataNascimento = DateTime.ParseExact("04/09/1976", "dd/MM/yyyy", CultureInfo.InvariantCulture),
+                    IdUtilizador = "10450067-5f19-44c7-8be1-388e8a6bdb30"
                 }
             );
+
 
             //cria seed para atribuir aos medicos as suas especialidades
             //A tabela EspecialidadesMedicos foi criada automaticamente, não existe modelo, ListaMedicosId é o id do medico, ListaEspecialidadesId é o id da especialidade
@@ -174,7 +404,8 @@ namespace Hospital.Data
                     Email = "teixeira@email.com",
                     Foto = "semFoto.png",
                     DataNascimento = DateTime.ParseExact("07/02/1979", "dd/MM/yyyy", CultureInfo.InvariantCulture),
-                    Sexo = "F"
+                    Sexo = "F",
+                    IdUtilizador = "29f5f36e-5f11-42a2-b0b8-de7741c7de16"
                 }, new Utentes
                 {
                     Id = 2,
@@ -185,7 +416,8 @@ namespace Hospital.Data
                     Email = "leonardo@email.com",
                     Foto = "222222222.png",
                     DataNascimento = DateTime.ParseExact("04/04/1988", "dd/MM/yyyy", CultureInfo.InvariantCulture),
-                    Sexo = "M"
+                    Sexo = "M",
+                    IdUtilizador = "a91d6e50-ec7a-442d-9278-4567dc61a0aa"
                 }, new Utentes
                 {
                     Id = 3,
@@ -196,7 +428,8 @@ namespace Hospital.Data
                     Email = "belaHenriques@email.com",
                     Foto = "333333333.png",
                     DataNascimento = DateTime.ParseExact("23/09/1968", "dd/MM/yyyy", CultureInfo.InvariantCulture),
-                    Sexo = "F"
+                    Sexo = "F",
+                    IdUtilizador = "18d7e29d-408f-42d7-9a27-ecc5d034d157"
                 }, new Utentes
                 {
                     Id = 4,
@@ -207,7 +440,8 @@ namespace Hospital.Data
                     Email = "joaocelso@email.com",
                     Foto = "semFoto.png",
                     DataNascimento = DateTime.ParseExact("08/09/1963", "dd/MM/yyyy", CultureInfo.InvariantCulture),
-                    Sexo = "M"
+                    Sexo = "M",
+                    IdUtilizador = "5db04ccb-3be8-452f-b381-47bd2277fdca"
                 }, new Utentes
                 {
                     Id = 5,
@@ -218,7 +452,8 @@ namespace Hospital.Data
                     Email = "ineshenriques@email.com",
                     Foto = "555555555.png",
                     DataNascimento = DateTime.ParseExact("12/04/1990", "dd/MM/yyyy", CultureInfo.InvariantCulture),
-                    Sexo = "F"
+                    Sexo = "F",
+                    IdUtilizador = "db43e582-e359-421d-9192-1d3ad1a57737"
                 }
             );
 

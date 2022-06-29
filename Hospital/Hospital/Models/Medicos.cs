@@ -79,5 +79,10 @@ namespace Hospital.Models
         [Display(Name = "Lista de Especialidades")]
         public ICollection<Especialidades> ListaEspecialidades { get; set; }
 
+        /// <summary>
+        /// FK para conectar com a tabela de Autentificação
+        /// </summary>
+        public string IdUtilizador { get; set; }
+
     }
 }
