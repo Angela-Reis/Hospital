@@ -2,10 +2,35 @@
 using Microsoft.EntityFrameworkCore;
 using Hospital.Models;
 using System.Globalization;
+using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
 
 namespace Hospital.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    /// <summary>
+    /// Classe que representa os novos dados do Utilizador
+    /// </summary>
+    public class UtilizadorApp : IdentityUser
+    {
+        /// <summary>
+        ///  Nome do Utilizador
+        /// </summary>
+        [Required]
+        [RegularExpression("[A-ZÂÓÍa-záéíóúàèìòùâêîôûãõäëïöüñç '-]+", ErrorMessage = "No {0} só são aceites letras")]
+        [StringLength(128, ErrorMessage = "O {0} não pode ter mais do que {1} caracteres.")]
+        public string Nome { get; set; }
+
+        /// <summary>
+        /// Data de Registro
+        /// </summary>
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        [DataType(DataType.Date)]
+        public DateTime DataRegistro { get; set; }
+
+
+    }
+
+    public class ApplicationDbContext : IdentityDbContext<UtilizadorApp>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)

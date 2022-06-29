@@ -10,11 +10,14 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+//acesso a autenticao
+ //builder.Services.AddDefaultIdentity<IdentityUser>(
+    builder.Services.AddDefaultIdentity<UtilizadorApp>(
+    options => options.SignIn.RequireConfirmedAccount = true)
+    .AddRoles<IdentityRole>() // allows the use of Roles
     .AddEntityFrameworkStores<ApplicationDbContext>();
-builder.Services.AddControllersWithViews();
 
-/* acesso às variaveis de sessão  */
+/* acesso as variaveis de sessÃ£oï¿½o  */
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options => {
     options.IdleTimeout = TimeSpan.FromSeconds(120);
@@ -43,7 +46,7 @@ app.UseStaticFiles();
 app.UseRouting();
 
 
-// começar a usar as variaveis de sessão
+// comeï¿½ar a usar as variaveis de sessï¿½o
 app.UseSession();
 
 app.UseAuthentication();
