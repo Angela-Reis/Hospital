@@ -43,6 +43,13 @@ namespace Hospital.Data
             // importa a execução previa do método
             base.OnModelCreating(modelBuilder);
 
+            // criar os perfis de utilizador da app
+            modelBuilder.Entity<IdentityRole>().HasData(
+               new IdentityRole { Id = "a", Name = "Administrativo", NormalizedName = "ADMINISTRATIVO" },
+               new IdentityRole { Id = "m", Name = "Medico", NormalizedName = "MEDICO" },
+               new IdentityRole { Id = "u", Name = "Utente", NormalizedName = "UTENTE" }
+            );
+
             // cria a seed das Especialidades
             modelBuilder.Entity<Especialidades>().HasData(
                new Especialidades { Id = 1, Nome = "Clínica Geral" },

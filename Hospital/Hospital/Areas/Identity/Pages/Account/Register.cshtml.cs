@@ -175,6 +175,10 @@ namespace Hospital.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
+
+                    // associar o utilizador criado desta forma ao "Role" de "Utente"
+                    await _userManager.AddToRoleAsync(user, "Utente");
+
                     //adicionar FK ao utente
                     Input.Utente.IdUtilizador = user.Id;
                     // Guardar o utente adicionando os dados que faltam
@@ -206,15 +210,15 @@ namespace Hospital.Areas.Identity.Pages.Account
                     }
                     catch (Exception)
                     {
-                        // if I am here, something bad happened
-                        // what I need to do????
-                        // 
-                        // I must do a Rollback to all process
-                        // this mean - delete the user prevously created
+                        // se chegei aqui, aconteceu um problema
+                        // o que fazer????
+                        //
+                        // É necessario fazer um Rollback ao processo
+                        // o que significa - eliminar o utilizador previamente criado
                         await _userManager.DeleteAsync(user);
-                        // create a message to user
-                        ModelState.AddModelError("", "It was impossible to create user. Something wrong happened");
-                        // return control to user
+                        // Enviar erro ao utilizador
+                        ModelState.AddModelError("", "Ocorreu um erro com a criação do Utilizador");
+                        // devolver o controlo ao utilizador
                         return Page();
                     }
 

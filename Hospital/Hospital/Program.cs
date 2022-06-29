@@ -14,7 +14,7 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
  //builder.Services.AddDefaultIdentity<IdentityUser>(
     builder.Services.AddDefaultIdentity<UtilizadorApp>(
     options => options.SignIn.RequireConfirmedAccount = true)
-    .AddRoles<IdentityRole>() // allows the use of Roles
+    .AddRoles<IdentityRole>() // adiciona a capacidade da App identificar 'perfis', ou seja Roles, de utilizador
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
 /* acesso as variaveis de sessão�o  */
