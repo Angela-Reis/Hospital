@@ -1,0 +1,97 @@
+﻿@page
+@model RegisterModel
+@{
+	ViewData["Title"] = "Register";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+
+<form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post" enctype="multipart/form-data">
+	<h2>Criar Nova Conta.</h2>
+	<div class="row">
+		<div class="col-md-4">
+			<hr />
+			@* ler os dados do utente*@
+			<div class="form-group">
+				@*Mostrar uma preview da foto do utente*@
+				<input type="file" asp-for="Input.NovaFoto"
+					   class="custom-file-input fileUpload" accept="image/png, image/jpeg" onchange="MostraPreview(event)" />
+								<img id="imgVer" src="/Fotos/Utentes/semFoto.png" alt="imagem" height="100" />
+
+				<span asp-validation-for="Input.Utente.Foto" class="text-danger"></span>
+				<span asp-validation-for="Input.Utente.Foto" class="text-danger"></span>
+			</div>
+			<div class="form-floating">
+				<input asp-for="Input.Utente.Nome" class="form-control" />
+				<label asp-for="Input.Utente.Nome"></label>
+				<span asp-validation-for="Input.Utente.Nome" class="text-danger"></span>
+			</div>
+			<div class="form-floating">
+				<input asp-for="Input.Utente.DataNascimento" class="form-control" />
+				<label asp-for="Input.Utente.DataNascimento"></label>
+				<span asp-validation-for="Input.Utente.DataNascimento" class="text-danger"></span>
+			</div>
+			<div class="form-floating">
+				<input asp-for="Input.Utente.Sexo" class="form-control" />
+				<label asp-for="Input.Utente.Sexo"></label>
+				<span asp-validation-for="Input.Utente.Sexo" class="text-danger"></span>
+			</div>
+			<div class="form-floating">
+				<input asp-for="Input.Utente.NumUtente" class="form-control" />
+				<label asp-for="Input.Utente.NumUtente"></label>
+				<span asp-validation-for="Input.Utente.NumUtente" class="text-danger"></span>
+			</div>
+			<div class="form-floating">
+				<input asp-for="Input.Utente.NIF" class="form-control" />
+				<label asp-for="Input.Utente.NIF"></label>
+				<span asp-validation-for="Input.Utente.NIF" class="text-danger"></span>
+			</div>
+
+			<div class="form-floating">
+				<input asp-for="Input.Utente.NumTelemovel" class="form-control" />
+				<label asp-for="Input.Utente.NumTelemovel"></label>
+				<span asp-validation-for="Input.Utente.NumTelemovel" class="text-danger"></span>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<hr />
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+			<div class="form-floating">
+				<input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" />
+				<label asp-for="Input.Email"></label>
+				<span asp-validation-for="Input.Email" class="text-danger"></span>
+			</div>
+			<div class="form-floating">
+				<input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" />
+				<label asp-for="Input.Password"></label>
+				<span asp-validation-for="Input.Password" class="text-danger"></span>
+			</div>
+			<div class="form-floating">
+				<input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" />
+				<label asp-for="Input.ConfirmPassword"></label>
+				<span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+			</div>
+			<button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+		</div>
+	</div>
+</form>
+
+<script type="text/javascript">
+    @*Mostra uma preview da imagem na img com id 'imgVer'*@
+    function MostraPreview(event) {
+        var output = document.getElementById('imgVer');
+        if(event.target.files.length !== 0){
+            output.src = URL.createObjectURL(event.target.files[0]);
+            output.onload = function() {
+                URL.revokeObjectURL(output.src)
+            }
+        }else{
+            document.getElementById('imgVer').src = '/Fotos/Utentes/semFoto.png';
+        }
+    };
+</script>
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}

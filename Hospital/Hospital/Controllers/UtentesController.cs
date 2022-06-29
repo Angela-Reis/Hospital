@@ -292,7 +292,7 @@ namespace Hospital.Controllers
                 string novaLocalFicheiro = Path.Combine(addressGuardarFicheiro, "Fotos//Utentes");
 
                 //Apaga Foto-----------------------------------------------
-                if (Directory.Exists(novaLocalFicheiro) && !utentes.Foto.Equals("semFoto.png"))
+                if (Directory.Exists(novaLocalFicheiro) && utentes.Foto is not null && !utentes.Foto.Equals("semFoto.png"))
                 {
                     FileInfo imgAntiga = new FileInfo(Path.Combine(novaLocalFicheiro, utentes.Foto));
                     if (imgAntiga.Exists)//verifica se o ficheiro existe

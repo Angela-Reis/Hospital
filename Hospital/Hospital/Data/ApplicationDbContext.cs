@@ -16,7 +16,6 @@ namespace Hospital.Data
         ///  Nome do Utilizador
         /// </summary>
         [Required]
-        [RegularExpression("[A-ZÂÓÍa-záéíóúàèìòùâêîôûãõäëïöüñç '-]+", ErrorMessage = "No {0} só são aceites letras")]
         [StringLength(128, ErrorMessage = "O {0} não pode ter mais do que {1} caracteres.")]
         public string Nome { get; set; }
 

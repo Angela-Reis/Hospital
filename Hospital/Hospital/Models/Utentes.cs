@@ -92,6 +92,11 @@ namespace Hospital.Models
         /// </summary>
         public ICollection<Consultas> ListaConsultas { get; set; }
 
+        /// <summary>
+        /// FK para conectar com a tabela de Autentificação
+        /// </summary>
+        public string IdUtilizador { get; set; }
+
 
     }
 }
