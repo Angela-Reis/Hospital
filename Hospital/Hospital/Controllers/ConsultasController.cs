@@ -8,24 +8,52 @@ using Microsoft.EntityFrameworkCore;
 using Hospital.Data;
 using Hospital.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace Hospital.Controllers
 {
     [Authorize]
+    [Authorize(Roles = "Administrativo, Medico, Utente")]
     public class ConsultasController : Controller
     {
         private readonly ApplicationDbContext _context;
-
-        public ConsultasController(ApplicationDbContext context)
+        private readonly UserManager<UtilizadorApp> _userManager;
+        public ConsultasController(ApplicationDbContext context, UserManager<UtilizadorApp> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Consultas
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Consultas.Include(c => c.Diagnostico).Include(c => c.Medico).Include(c => c.Utente);
-            return View(await applicationDbContext.ToListAsync());
+            List<Consultas> consultas = null;
+            // obtem o id do utilizador
+            string utilID = _userManager.GetUserId(User);
+            if (User.IsInRole("Utente"))
+            {
+                //mostrar apenas consulta do proprio utente
+                consultas = await _context.Consultas.Where(c => c.Utente.IdUtilizador == utilID)
+                    .Include(c => c.Diagnostico)
+                    .Include(c => c.Medico)
+                    .Include(c => c.Utente).ToListAsync();
+            }
+            else if (User.IsInRole("Medico"))
+            {
+                //mostrar apenas consulta do médico 
+                consultas = await _context.Consultas.Where(c => c.Medico.IdUtilizador == utilID)
+                    .Include(c => c.Diagnostico)
+                    .Include(c => c.Medico)
+                    .Include(c => c.Utente).ToListAsync();
+            }
+            else
+            {
+                consultas = await _context.Consultas
+                    .Include(c => c.Diagnostico)
+                    .Include(c => c.Medico)
+                    .Include(c => c.Utente).ToListAsync();
+            }
+            return View(consultas);
         }
 
         // GET: Consultas/Details/5
@@ -35,24 +63,44 @@ namespace Hospital.Controllers
             {
                 return NotFound();
             }
-
-            var consultas = await _context.Consultas
-                .Include(c => c.Diagnostico)
-                .Include(c => c.Medico)
-                .Include(c => c.Utente)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (consultas == null)
+            Consultas consulta = null;
+            // obtem o id do utilizador
+            string utilID = _userManager.GetUserId(User);
+            if (User.IsInRole("Utente"))
+            {
+                //mostrar apenas consulta do proprio utente
+                consulta = await _context.Consultas.Where(c => c.Utente.IdUtilizador == utilID)
+                    .Include(c => c.Diagnostico)
+                    .Include(c => c.Medico)
+                    .Include(c => c.Utente).FirstOrDefaultAsync(m => m.Id == id); ;
+            }
+            else if (User.IsInRole("Medico"))
+            {
+                //mostrar apenas consulta do médico 
+                consulta = await _context.Consultas.Where(c => c.Medico.IdUtilizador == utilID)
+                    .Include(c => c.Diagnostico)
+                    .Include(c => c.Medico)
+                    .Include(c => c.Utente).FirstOrDefaultAsync(m => m.Id == id); ;
+            }
+            else
+            {
+                consulta = await _context.Consultas
+                    .Include(c => c.Diagnostico)
+                    .Include(c => c.Medico)
+                    .Include(c => c.Utente).FirstOrDefaultAsync(m => m.Id == id); ;
+            }
+            if (consulta == null)
             {
                 return NotFound();
             }
 
-            return View(consultas);
+            return View(consulta);
         }
 
         // GET: Consultas/Create
         public IActionResult Create()
         {
-            ViewData["DiagnosticoFK"] = new SelectList(_context.Diagnosticos, "Id", "Descricao");
+            ViewData["DiagnosticoFK"] = new SelectList(_context.Diagnosticos, "Id", "Titulo");
             ViewData["MedicoFK"] = new SelectList(_context.Medicos, "Id", "Nome");
             ViewData["UtenteFK"] = new SelectList(_context.Utentes, "Id", "Nome");
             return View();
@@ -71,7 +119,7 @@ namespace Hospital.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DiagnosticoFK"] = new SelectList(_context.Diagnosticos, "Id", "Descricao", consulta.DiagnosticoFK);
+            ViewData["DiagnosticoFK"] = new SelectList(_context.Diagnosticos, "Id", "Titulo", consulta.DiagnosticoFK);
             ViewData["MedicoFK"] = new SelectList(_context.Medicos, "Id", "Nome", consulta.MedicoFK);
             ViewData["UtenteFK"] = new SelectList(_context.Utentes, "Id", "Nome", consulta.UtenteFK);
             return View(consulta);
@@ -90,7 +138,7 @@ namespace Hospital.Controllers
             {
                 return NotFound();
             }
-            ViewData["DiagnosticoFK"] = new SelectList(_context.Diagnosticos, "Id", "Descricao", consultas.DiagnosticoFK);
+            ViewData["DiagnosticoFK"] = new SelectList(_context.Diagnosticos, "Id", "Titulo", consultas.DiagnosticoFK);
             ViewData["MedicoFK"] = new SelectList(_context.Medicos, "Id", "Nome", consultas.MedicoFK);
             ViewData["UtenteFK"] = new SelectList(_context.Utentes, "Id", "Nome", consultas.UtenteFK);
             //variavel de sessão que guarda o id da consulta a ser editada
@@ -143,13 +191,14 @@ namespace Hospital.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DiagnosticoFK"] = new SelectList(_context.Diagnosticos, "Id", "Descricao", consulta.DiagnosticoFK);
+            ViewData["DiagnosticoFK"] = new SelectList(_context.Diagnosticos, "Id", "Titulo", consulta.DiagnosticoFK);
             ViewData["MedicoFK"] = new SelectList(_context.Medicos, "Id", "Nome", consulta.MedicoFK);
             ViewData["UtenteFK"] = new SelectList(_context.Utentes, "Id", "Nome", consulta.UtenteFK);
             return View(consulta);
         }
 
         // GET: Consultas/Delete/5
+        [Authorize(Roles = "Administrativo")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Consultas == null)
@@ -175,6 +224,7 @@ namespace Hospital.Controllers
         // POST: Consultas/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrativo")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Consultas == null)

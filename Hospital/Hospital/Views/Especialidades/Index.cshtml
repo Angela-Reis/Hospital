@@ -5,7 +5,8 @@
 }
 
 <h1>Index das Especialidades</h1>
-@if (User.Identity.IsAuthenticated){
+@if (User.IsInRole("Administrativo"))
+{ 
 	<p>
 		<a asp-action="Create">Criar novo</a>
 	</p>
@@ -23,7 +24,8 @@
 		</tr>
 	</thead>
 	<tbody>
-		@foreach (var item in Model) {
+		@foreach (var item in Model)
+		{
 			<tr>
 				<td>
 					@Html.DisplayFor(modelItem => item.Nome)
@@ -33,14 +35,16 @@
 					@item.ListaMedicos.Count()
 				</td>
 				<td>
-					@if (User.Identity.IsAuthenticated){
+					@if (User.IsInRole("Administrativo"))
+					{
 						<text>
 							<a asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
 						</text>
 					}
-							<a asp-action="Details" asp-route-id="@item.Id">Detalhes</a> |
-					@if (User.Identity.IsAuthenticated){
-							<a asp-action="Delete" asp-route-id="@item.Id">Apagar</a>
+					<a asp-action="Details" asp-route-id="@item.Id">Detalhes</a> |
+					@if (User.IsInRole("Administrativo"))
+					{
+						<a asp-action="Delete" asp-route-id="@item.Id">Apagar</a>
 					}
 				</td>
 			</tr>

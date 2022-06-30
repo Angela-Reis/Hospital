@@ -8,24 +8,43 @@ using Microsoft.EntityFrameworkCore;
 using Hospital.Data;
 using Hospital.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace Hospital.Controllers
 {
     [Authorize]
+    [Authorize(Roles = "Administrativo, Utente")]
     public class PagamentosController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<UtilizadorApp> _userManager;
 
-        public PagamentosController(ApplicationDbContext context)
+        public PagamentosController(ApplicationDbContext context, UserManager<UtilizadorApp> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Pagamentos
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Pagamentos.Include(p => p.Consulta);
-            return View(await applicationDbContext.ToListAsync());
+            List<Pagamentos> pagamentos = null;
+            // obtem o id do utilizador
+            string utilID = _userManager.GetUserId(User);
+            //Redireciona os Utentes para a sua pagina de Detalhes
+            if (User.IsInRole("Utente"))
+            {
+                //moatrar apenas diagnósticos do proprio utente
+                pagamentos = await _context.Pagamentos
+                    .Include(p => p.Consulta)
+                    .Where(p=>p.Consulta.Utente.IdUtilizador == utilID)
+                    .ToListAsync();
+            }
+            else
+            {
+                pagamentos = await _context.Pagamentos.Include(p => p.Consulta).ToListAsync();
+            }
+            return View(pagamentos);
         }
 
         // GET: Pagamentos/Details/5
@@ -35,19 +54,32 @@ namespace Hospital.Controllers
             {
                 return NotFound();
             }
+            Pagamentos pagamento = null;
+            // obtem o id do utilizador
+            string utilID = _userManager.GetUserId(User);
+            if (User.IsInRole("Utente"))
+            {
+                //moatrar apenas diagnósticos do proprio utente
+                pagamento = await _context.Pagamentos
+                    .Include(p => p.Consulta)
+                    .Where(p => p.Consulta.Utente.IdUtilizador == utilID)
+                    .FirstOrDefaultAsync(m => m.Id == id);
+            }
+            else
+            {
+                pagamento = await _context.Pagamentos.Include(p => p.Consulta).FirstOrDefaultAsync(m => m.Id == id);
+            }
 
-            var pagamentos = await _context.Pagamentos
-                .Include(p => p.Consulta)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (pagamentos == null)
+            if (pagamento == null)
             {
                 return NotFound();
             }
 
-            return View(pagamentos);
+            return View(pagamento);
         }
 
         // GET: Pagamentos/Create
+        [Authorize(Roles = "Administrativo")]
         public IActionResult Create()
         {
             ViewData["ConsultaFK"] = new SelectList(_context.Consultas, "Id", "Motivo");
@@ -82,6 +114,7 @@ namespace Hospital.Controllers
         }
 
         // GET: Pagamentos/Edit/5
+        [Authorize(Roles = "Administrativo")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Pagamentos == null)
@@ -106,6 +139,7 @@ namespace Hospital.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrativo")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,AuxValor,Valor,Descricao,Estado,DataEfetuado,Metodo,ConsultaFK")] Pagamentos pagamentos)
         {
             if (id != pagamentos.Id)
@@ -154,6 +188,7 @@ namespace Hospital.Controllers
         }
 
         // GET: Pagamentos/Delete/5
+        [Authorize(Roles = "Administrativo")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Pagamentos == null)
@@ -176,6 +211,7 @@ namespace Hospital.Controllers
         // POST: Pagamentos/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrativo")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Pagamentos == null)

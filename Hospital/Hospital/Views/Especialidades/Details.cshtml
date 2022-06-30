@@ -32,7 +32,7 @@
 			</dd>
 		}
 	</dl>
-	@if (User.Identity.IsAuthenticated)
+	@if (User.IsInRole("Administrativo")) 
 	{
 		<text>
 			<a asp-action="Edit" asp-route-id="@Model?.Id">Editar</a> |

@@ -103,7 +103,7 @@
 			if(fotoAtual!== 'semFoto.png'){
 				document.getElementById('fotoApagar').value = 'false';
 			}
-			document.getElementById('imgVer').src = '/Fotos/Medicos/'+fotoAtual;
+			document.getElementById('imgVer').src = '/Fotos/Utentes/'+fotoAtual;
 			//se existe foto inicial, exceto a semFoto
 			if("semFoto.png" !== '@Model.Foto' ){
 				//mostrar butoes para alterar-la
@@ -115,13 +115,13 @@
 	function alteraOriginal(){
 		//se não esta selecionado para remover a foto original dar a opção de a apagar
 		if(document.getElementById('fotoApagar').value === 'false'){
-			document.getElementById('imgVer').src='/Fotos/Medicos/semFoto.png';
+			document.getElementById('imgVer').src='/Fotos/Utentes/semFoto.png';
 			document.getElementById('valorFoto').value = 'semFoto.png';
 			document.getElementById('fotoApagar').value = true;
 			document.getElementById('alterarFoto').innerHTML = 'Retornar Foto';
 		}else if(document.getElementById('fotoApagar').value === 'true'){
 			//se está selecionada a opção de apagar a foto original dar a opção de reverter essa mudança
-			document.getElementById('imgVer').src='/Fotos/Medicos/@Model.Foto';
+			document.getElementById('imgVer').src='/Fotos/Utentes/@Model.Foto';
 			document.getElementById('valorFoto').value = '@Model.Foto';
 			document.getElementById('fotoApagar').value = false;
 			document.getElementById('alterarFoto').innerHTML = 'Remover Foto';

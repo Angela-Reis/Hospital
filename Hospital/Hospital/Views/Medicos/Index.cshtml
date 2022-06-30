@@ -1,11 +1,13 @@
 ﻿@model IEnumerable<Hospital.Models.Medicos>
+@using Microsoft.AspNetCore.Identity
 
 @{
 	ViewData["Title"] = "Index";
 }
 
 <h1>Lista dos Médicos</h1>
-@if (User.Identity.IsAuthenticated){
+@if (User.IsInRole("Administrativo"))
+{
 	<p>
 		<a asp-action="Create">Criar novo Médico</a>
 	</p>
@@ -38,7 +40,8 @@
 		</tr>
 	</thead>
 	<tbody>
-@foreach (var medico in Model) {
+		@foreach (var medico in Model)
+		{
 			<tr>
 				<td>
 					@Html.DisplayFor(modelItem => medico.Nome)
@@ -61,7 +64,8 @@
 				</td>
 				<td>
 					@*@Html.DisplayFor(modelItem => item.Foto)*@
-				@if (!string.IsNullOrEmpty(medico.Foto)) {
+					@if (!string.IsNullOrEmpty(medico.Foto))
+					{
 						<a href="~/Fotos/Medicos/@medico.Foto" target="_blank">
 							<img src="~/Fotos/Medicos/@medico.Foto"
 						 alt="foto do médico: @Html.DisplayFor(modelItem => medico.Nome)"
@@ -69,7 +73,8 @@
 						 height="75" />
 						</a>
 					}
-				else {
+					else
+					{
 						<img src="~/Fotos/Medicos/semFoto.png"
 					 alt="foto do médico: @Html.DisplayFor(modelItem => medico.Nome)"
 					 title="@medico.Nome"
@@ -77,14 +82,17 @@
 					}
 				</td>
 				<td>
-					@if (User.Identity.IsAuthenticated){
+					@*Mostar Link para Editar se o utilizador for um Administrativo or for o Medico com id*@
+					@if (User.IsInRole("Administrativo") || (User.IsInRole("Medico") && ViewBag.atualId == medico.IdUtilizador))
+					{
 						<text>
 							<a asp-action="Edit" asp-route-id="@medico.Id">Editar</a> |
 						</text>
 					}
-							<a asp-action="Details" asp-route-id="@medico.Id">Detalhes</a> |
-					@if (User.Identity.IsAuthenticated){
-							<a asp-action="Delete" asp-route-id="@medico.Id">Apagar</a>
+					<a asp-action="Details" asp-route-id="@medico.Id">Detalhes</a> |
+					@if (User.IsInRole("Administrativo"))
+					{
+						<a asp-action="Delete" asp-route-id="@medico.Id">Apagar</a>
 					}
 				</td>
 			</tr>

@@ -5,10 +5,12 @@
 }
 
 <h1>Lista de Utentes</h1>
-
-<p>
-	<a asp-action="Create">Criar Novo Utente</a>
-</p>
+@if (User.IsInRole("Administrativo"))
+{
+	<p>
+		<a asp-action="Create">Criar Novo Utente</a>
+	</p>
+}
 <table class="table">
 	<thead>
 		<tr>
@@ -69,7 +71,7 @@
 					@if (!string.IsNullOrEmpty(item.Foto))
 					{
 						<a href="~/Fotos/Utentes/@item.Foto" target="_blank">
-						<img src="~/Fotos/Utentes/@item.Foto"
+							<img src="~/Fotos/Utentes/@item.Foto"
 						 alt="foto do utente: @Html.DisplayFor(modelItem => item.Nome)"
 						 title="@item.Nome"
 						 height="75" />
@@ -78,15 +80,24 @@
 					else
 					{
 						<img src="~/Fotos/Utentes/semFoto.png"
-						 alt="foto do utente: @Html.DisplayFor(modelItem => item.Nome)"
-						 title="@item.Nome"
-						 height="75" />
+					 alt="foto do utente: @Html.DisplayFor(modelItem => item.Nome)"
+					 title="@item.Nome"
+					 height="75" />
 					}
 				</td>
 				<td>
-					<a asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
+					@*Mostar Link para Editar se o utilizador for um Administrativo or for o Medico com id*@
+					@if (User.IsInRole("Administrativo"))
+					{
+						<text>
+							<a asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
+						</text>
+					}
 					<a asp-action="Details" asp-route-id="@item.Id">Detalhes</a> |
-					<a asp-action="Delete" asp-route-id="@item.Id">Apagar</a>
+					@if (User.IsInRole("Administrativo"))
+					{
+						<a asp-action="Delete" asp-route-id="@item.Id">Apagar</a>
+					}
 				</td>
 			</tr>
 		}

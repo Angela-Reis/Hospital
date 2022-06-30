@@ -621,7 +621,7 @@ namespace Hospital.Data
                     Valor = 12.5M,
                     Estado = false,
                     Metodo = null,
-                    ConsultaFK = 3,
+                    ConsultaFK = 4,
                     DataEfetuado = null
                 }, new Pagamentos
                 {
@@ -630,16 +630,7 @@ namespace Hospital.Data
                     Valor = 12.5M,
                     Estado = false,
                     Metodo = null,
-                    ConsultaFK = 3,
-                    DataEfetuado = null
-                }, new Pagamentos
-                {
-                    Id = 8,
-                    Descricao = "Taxa Moderadora",
-                    Valor = 12.5M,
-                    Estado = false,
-                    Metodo = null,
-                    ConsultaFK = 3,
+                    ConsultaFK = 5,
                     DataEfetuado = null
                 }
             );

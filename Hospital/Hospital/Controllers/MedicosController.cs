@@ -8,25 +8,32 @@ using Microsoft.EntityFrameworkCore;
 using Hospital.Data;
 using Hospital.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace Hospital.Controllers
 {
     [Authorize]
+    [Authorize(Roles = "Administrativo,Medico")]
     public class MedicosController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly UserManager<UtilizadorApp> _userManager;
 
-        public MedicosController(ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
+        public MedicosController(ApplicationDbContext context, IWebHostEnvironment webHostEnvironment,
+                               UserManager<UtilizadorApp> userManager)
         {
             _context = context;
             _webHostEnvironment = webHostEnvironment;
+            _userManager = userManager;
         }
 
         // GET: Medicos
         [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
+            //adicionar a viewBaf
+            ViewBag.atualId = _userManager.GetUserId(User);
             //passar para o index a lista de Especialidades
             return View(await _context.Medicos.Include(x => x.ListaEspecialidades).ToListAsync());
         }
@@ -46,10 +53,9 @@ namespace Hospital.Controllers
             {
                 return NotFound();
             }
-
+            ViewBag.atualId = _userManager.GetUserId(User);
             return View(medicos);
         }
-
         // GET: Medicos/Create
         public IActionResult Create()
         {
@@ -128,21 +134,32 @@ namespace Hospital.Controllers
             {
                 return NotFound();
             }
-
-            var medicos = await _context.Medicos.Include(m => m.ListaEspecialidades).FirstOrDefaultAsync(m => m.Id == id);
-            if (medicos == null)
+            // obtem o id do utilizador
+            Medicos medico = null;
+            if (User.IsInRole("Medico"))
             {
-                return NotFound();
+                string utilID = _userManager.GetUserId(User);
+                medico = await _context.Medicos.Include(m => m.ListaEspecialidades).Where(m => m.IdUtilizador == utilID).FirstOrDefaultAsync(m => m.Id == id);
+            }
+            else if(User.IsInRole("Administrativo"))
+            {
+               
+                medico = await _context.Medicos.Include(m => m.ListaEspecialidades).FirstOrDefaultAsync(m => m.Id == id);
+            }
+            if (medico == null)
+            {
+                return RedirectToAction("Index");
             }
 
-
-            //devolve todos os medicos que já pertencem à especialidade
-            var selecionados = medicos.ListaEspecialidades.Select(x => x.Id).ToArray();
+            //devolve todos os medico que já pertencem à especialidade
+            var selecionados = medico.ListaEspecialidades.Select(x => x.Id).ToArray();
             ViewData["ListaEspecialidades"] = new MultiSelectList(_context.Especialidades, nameof(Especialidades.Id), nameof(Especialidades.Nome), selecionados);
 
-            HttpContext.Session.SetInt32("MedicoEditId", medicos.Id);
-            HttpContext.Session.SetString("FotoMedico", medicos.Foto);
-            return View(medicos);
+            //Guardar variaveis de sessão
+            HttpContext.Session.SetInt32("MedicoEditId", medico.Id);
+            HttpContext.Session.SetString("FotoMedico", medico.Foto);
+            HttpContext.Session.SetString("MedicoIdUtilizador", medico.IdUtilizador);
+            return View(medico);
         }
 
         // POST: Medicos/Edit/5
@@ -150,28 +167,29 @@ namespace Hospital.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,NumTelefone,Email,Nome,NumCedulaProf,DataNascimento,Foto")] Medicos medicos, int[] EspecialidadeId, IFormFile novaFotoMed, string FotoApagar)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,NumTelefone,Email,Nome,NumCedulaProf,DataNascimento,Foto")] Medicos medico, int[] EspecialidadeId, IFormFile novaFotoMed, string FotoApagar)
         {
-            if (id != medicos.Id)
+            if (id != medico.Id)
             {
                 return NotFound();
             }
             var medicoPrevioGuardado = HttpContext.Session.GetInt32("MedicoEditId");
-
+            var idUtilizador = HttpContext.Session.GetString("MedicoIdUtilizador");
+            medico.IdUtilizador = idUtilizador;
             if (medicoPrevioGuardado == null)
             {
                 ModelState.AddModelError("", "Sessão Expirou, passou de tempo");
-                return View(medicos);
+                return View(medico);
             }
 
-            if (medicoPrevioGuardado != medicos.Id)
+            if (medicoPrevioGuardado != medico.Id)
             {
                 return RedirectToAction("Index");
             }
 
             if (novaFotoMed == null)
             {
-                medicos.Foto = "semFoto.png";
+                medico.Foto = "semFoto.png";
             }
             else
             {
@@ -180,17 +198,17 @@ namespace Hospital.Controllers
                     // Mostra um erro
                     ModelState.AddModelError("", "Foto enviada não é uma imagem");
                     // Devolve controlo a view, com os dados previamente inseridos
-                    return View(medicos);
+                    return View(medico);
                 }
                 else
                 {
                     // define image name
                     Guid g = Guid.NewGuid();
-                    string nomeImg = medicos.NumCedulaProf + "_GUID" + g.ToString();
+                    string nomeImg = medico.NumCedulaProf + "_GUID" + g.ToString();
                     string tipoImagem = Path.GetExtension(novaFotoMed.FileName).ToLower();
                     nomeImg += tipoImagem;
                     // add image name to vet data
-                    medicos.Foto = nomeImg;
+                    medico.Foto = nomeImg;
                 }
             }
             if (ModelState.IsValid)
@@ -198,7 +216,7 @@ namespace Hospital.Controllers
 
                 try
                 {
-                    _context.Update(medicos);
+                    _context.Update(medico);
                     var tempmedicos = await _context.Medicos.Include(m => m.ListaEspecialidades).FirstOrDefaultAsync(m => m.Id == id);
 
                     //Alterar Especialidades-----------------------------------------------------------------------
@@ -242,7 +260,7 @@ namespace Hospital.Controllers
                             if (fotoAntiga == null)
                             {
                                 ModelState.AddModelError("", "Sessão Expirou, passou de tempo");
-                                return View(medicos);
+                                return View(medico);
                             }
                             if (!fotoAntiga.Equals("semFoto.png"))
                             {
@@ -256,18 +274,18 @@ namespace Hospital.Controllers
                         if (novaFotoMed != null)
                         {
                             // guarda imagem nova no disco -------------------------------------------
-                            novaLocalFicheiro = Path.Combine(novaLocalFicheiro, medicos.Foto);
+                            novaLocalFicheiro = Path.Combine(novaLocalFicheiro, medico.Foto);
                             using var stream = new FileStream(novaLocalFicheiro, FileMode.Create);
                             await novaFotoMed.CopyToAsync(stream);
                         }
                     }
-                    medicos = tempmedicos;
-                    _context.Update(medicos);
+                    medico = tempmedicos;
+                    _context.Update(medico);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!MedicosExists(medicos.Id))
+                    if (!MedicosExists(medico.Id))
                     {
                         return NotFound();
                     }
@@ -278,10 +296,11 @@ namespace Hospital.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(medicos);
+            return View(medico);
         }
 
         // GET: Medicos/Delete/5
+        [Authorize(Roles = "Administrativo")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Medicos == null)
@@ -303,6 +322,7 @@ namespace Hospital.Controllers
         // POST: Medicos/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrativo")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Medicos == null)
@@ -333,7 +353,7 @@ namespace Hospital.Controllers
                         imgAntiga.Delete();//se existir elimina
                     }
                 }
-                
+
                 _context.Medicos.Remove(medicos);
             }
 

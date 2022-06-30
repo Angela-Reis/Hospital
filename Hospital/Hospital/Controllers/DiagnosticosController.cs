@@ -8,23 +8,52 @@ using Microsoft.EntityFrameworkCore;
 using Hospital.Data;
 using Hospital.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace Hospital.Controllers
 {
     [Authorize]
+    [Authorize(Roles = "Administrativo, Medico, Utente")]
     public class DiagnosticosController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<UtilizadorApp> _userManager;
 
-        public DiagnosticosController(ApplicationDbContext context)
+        public DiagnosticosController(ApplicationDbContext context, UserManager<UtilizadorApp> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Diagnosticos
         public async Task<IActionResult> Index()
         {
-              return View(await _context.Diagnosticos.Include(d => d.ListaConsultas).ToListAsync());
+            List<Diagnosticos> diagnosticos = null;
+            // obtem o id do utilizador
+            string utilID = _userManager.GetUserId(User);
+            //Redireciona os Utentes para a sua pagina de Detalhes
+            if (User.IsInRole("Utente"))
+            {
+                //moatrar apenas diagnósticos do proprio utente
+                diagnosticos = await _context.Diagnosticos.Include(d => d.ListaConsultas)
+                    .Where(d => d.ListaConsultas
+                    .Any(c => c.Utente.IdUtilizador == utilID))
+                    .ToListAsync();
+            }
+            else if (User.IsInRole("Medico"))
+            {
+                //mostrar apenas utentes com que o médico já teve consultas
+                diagnosticos = await _context.Diagnosticos.Include(d => d.ListaConsultas)
+                    .Where(u => u.ListaConsultas
+                    .Any(l => l.Medico.IdUtilizador == utilID))
+                    .ToListAsync();
+            }
+            else
+            {
+                diagnosticos = await _context.Diagnosticos.Include(d => d.ListaConsultas).ToListAsync();
+            }
+
+            return View(diagnosticos);
         }
 
         // GET: Diagnosticos/Details/5
@@ -34,18 +63,39 @@ namespace Hospital.Controllers
             {
                 return NotFound();
             }
+            Diagnosticos diagnostico = null;
+            string utilID = _userManager.GetUserId(User);
+            if (User.IsInRole("Utente"))
+            {
 
-            var diagnosticos = await _context.Diagnosticos
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (diagnosticos == null)
+                diagnostico = await _context.Diagnosticos.Include(d => d.ListaConsultas)
+                    .Where(d => d.ListaConsultas
+                    .Any(c => c.Utente.IdUtilizador == utilID))
+                    .FirstOrDefaultAsync(m => m.Id == id);
+
+            }
+            else if (User.IsInRole("Medico"))
+            {
+                diagnostico = await _context.Diagnosticos.Include(d => d.ListaConsultas)
+                    .Where(u => u.ListaConsultas
+                    .Any(l => l.Medico.IdUtilizador == utilID))
+                    .FirstOrDefaultAsync(m => m.Id == id);
+            }
+            else
+            {
+                diagnostico = await _context.Diagnosticos.Include(d => d.ListaConsultas).FirstOrDefaultAsync(m => m.Id == id);
+            }
+
+            if (diagnostico == null)
             {
                 return NotFound();
             }
 
-            return View(diagnosticos);
+            return View(diagnostico);
         }
 
         // GET: Diagnosticos/Create
+        [Authorize(Roles = "Administrativo, Medico")]
         public IActionResult Create()
         {
             return View();
@@ -56,6 +106,7 @@ namespace Hospital.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrativo, Medico")]
         public async Task<IActionResult> Create([Bind("Id,Titulo,Descricao,Estado")] Diagnosticos diagnosticos)
         {
             if (ModelState.IsValid)
@@ -68,6 +119,7 @@ namespace Hospital.Controllers
         }
 
         // GET: Diagnosticos/Edit/5
+        [Authorize(Roles = "Administrativo, Medico")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Diagnosticos == null)
@@ -92,6 +144,7 @@ namespace Hospital.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrativo, Medico")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Titulo,Descricao,Estado")] Diagnosticos diagnosticos)
         {
             if (id != diagnosticos.Id)
@@ -136,6 +189,7 @@ namespace Hospital.Controllers
         }
 
         // GET: Diagnosticos/Delete/5
+        [Authorize(Roles = "Administrativo")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Diagnosticos == null)
@@ -157,9 +211,10 @@ namespace Hospital.Controllers
         // POST: Diagnosticos/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrativo")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-             
+
             if (_context.Diagnosticos == null)
             {
                 return Problem("Entity set 'ApplicationDbContext.Diagnosticos'  is null.");
@@ -177,8 +232,8 @@ namespace Hospital.Controllers
             {
                 return RedirectToAction("Index");
             }
-           
-            
+
+
             if (diagnosticos != null)
             {
                 _context.Diagnosticos.Remove(diagnosticos);
@@ -189,7 +244,7 @@ namespace Hospital.Controllers
 
         private bool DiagnosticosExists(int id)
         {
-          return _context.Diagnosticos.Any(e => e.Id == id);
+            return _context.Diagnosticos.Any(e => e.Id == id);
         }
     }
 }
