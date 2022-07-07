@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Hospital.Data;
 using Hospital.Models;
+using Hospital.Models.APIViewModels;
 
 namespace Hospital.Controllers.API
 {
@@ -23,16 +24,39 @@ namespace Hospital.Controllers.API
 
         // GET: api/UtentesAPI
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Utentes>>> GetUtentes()
+        public async Task<ActionResult<IEnumerable<UtentesViewModel>>> GetUtentes()
         {
-            return await _context.Utentes.ToListAsync();
-        }
+            return await _context.Utentes.Select(m => new UtentesViewModel
+            {
+                Id = m.Id,
+                Nome = m.Nome,
+                NumUtente = m.NumUtente,
+                NIF = m.NIF,
+                NumTelefone = m.NumTelemovel,
+                Email = m.Email,
+                DataNascimento = m.DataNascimento.ToString("dd/MM/yyyy"),
+                Sexo = m.Sexo.ToUpper().Equals("F") ? "Mulher" : "Homem",
+                Foto = m.Foto
+            }).ToListAsync();
+            
+            }
 
         // GET: api/UtentesAPI/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Utentes>> GetUtentes(int id)
+        public async Task<ActionResult<UtentesViewModel>> GetUtentes(int id)
         {
-            var utentes = await _context.Utentes.FindAsync(id);
+            var utentes = await _context.Utentes.Select(m => new UtentesViewModel
+            {
+                Id = m.Id,
+                Nome = m.Nome,
+                NumUtente = m.NumUtente,
+                NIF = m.NIF,
+                NumTelefone = m.NumTelemovel,
+                Email = m.Email,
+                DataNascimento = m.DataNascimento.ToString("dd/MM/yyyy"),
+                Sexo = m.Sexo.ToUpper().Equals("F") ? "Mulher" : "Homem",
+                Foto = m.Foto
+            }).Where(a => a.Id == id).FirstOrDefaultAsync();
 
             if (utentes == null)
             {

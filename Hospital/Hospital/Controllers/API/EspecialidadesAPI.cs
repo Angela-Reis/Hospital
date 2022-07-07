@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Hospital.Data;
 using Hospital.Models;
+using Hospital.Models.APIViewModels;
 
 namespace Hospital.Controllers.API
 {
@@ -23,17 +24,30 @@ namespace Hospital.Controllers.API
 
         // GET: api/EspecialidadesAPI
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Especialidades>>> GetEspecialidades()
+        public async Task<ActionResult<IEnumerable<EspecialidadesViewModel>>> GetEspecialidades()
         {
-            return await _context.Especialidades.ToListAsync();
+
+            return await _context.Especialidades.Include(x => x.ListaMedicos)
+                .Select(e => new EspecialidadesViewModel
+                {
+                    Id = e.Id,
+                    Nome = e.Nome,
+                    Medicos = e.ListaMedicos
+                }).ToListAsync();
         }
 
         // GET: api/EspecialidadesAPI/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Especialidades>> GetEspecialidades(int id)
+        public async Task<ActionResult<EspecialidadesViewModel>> GetEspecialidades(int id)
         {
-            var especialidades = await _context.Especialidades.FindAsync(id);
-
+            var especialidades = await _context.Especialidades.
+                                Select(a => new EspecialidadesViewModel
+                                {
+                                    Id = a.Id,
+                                    Nome = a.Nome,
+                                    Medicos = a.ListaMedicos
+                                }).Where(a => a.Id == id)
+                                .FirstOrDefaultAsync();
             if (especialidades == null)
             {
                 return NotFound();

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Hospital.Data;
 using Hospital.Models;
+using Hospital.Models.APIViewModels;
 
 namespace Hospital.Controllers.API
 {
@@ -23,16 +24,36 @@ namespace Hospital.Controllers.API
 
         // GET: api/MedicosAPI
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Medicos>>> GetMedicos()
+        public async Task<ActionResult<IEnumerable<MedicosViewModel>>> GetMedicos()
         {
-            return await _context.Medicos.ToListAsync();
+            return await _context.Medicos.Include(x => x.ListaEspecialidades)
+                            .Select(m => new MedicosViewModel
+                            {
+                                Id = m.Id,
+                                Nome = m.Nome,
+                                NumCedulaProf = m.NumCedulaProf,
+                                NumTelefone = m.NumTelefone,
+                                Email = m.Email,
+                                DataNascimento = m.DataNascimento.ToString("dd/MM/yyyy"),
+                                Foto = m.Foto,
+                                Especialidades = m.ListaEspecialidades
+                            }).ToListAsync();
         }
 
         // GET: api/MedicosAPI/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Medicos>> GetMedicos(int id)
+        public async Task<ActionResult<MedicosViewModel>> GetMedicos(int id)
         {
-            var medicos = await _context.Medicos.FindAsync(id);
+            var medicos = await _context.Medicos.Select(m => new MedicosViewModel
+            {
+                Id = m.Id,
+                Nome = m.Nome,
+                NumCedulaProf = m.NumCedulaProf,
+                NumTelefone = m.NumTelefone,
+                Email = m.Email,
+                DataNascimento = m.DataNascimento.ToString("dd/MM/yyyys"),
+                Foto = m.Foto,
+            }).Where(a => a.Id == id).FirstOrDefaultAsync();
 
             if (medicos == null)
             {

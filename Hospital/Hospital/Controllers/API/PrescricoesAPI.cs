@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Hospital.Data;
 using Hospital.Models;
+using Hospital.Models.APIViewModels;
 
 namespace Hospital.Controllers.API
 {
@@ -23,16 +24,30 @@ namespace Hospital.Controllers.API
 
         // GET: api/PrescricoesAPI
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Prescricoes>>> GetPrescricoes()
+        public async Task<ActionResult<IEnumerable<PrescricoesViewModel>>> GetPrescricoes()
         {
-            return await _context.Prescricoes.ToListAsync();
+            return await _context.Prescricoes.Select(e => new PrescricoesViewModel
+            {
+                Id = e.Id,
+                Descricao = e.Descricao,
+                Estado = e.Estado ? "Válida" : "Expirada",
+                Data = e.Data.ToString("dd/MM/yyyy"),
+                Diagnostico = e.Diagnostico.Titulo
+            }).ToListAsync(); ;
         }
 
         // GET: api/PrescricoesAPI/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Prescricoes>> GetPrescricoes(int id)
+        public async Task<ActionResult<PrescricoesViewModel>> GetPrescricoes(int id)
         {
-            var prescricoes = await _context.Prescricoes.FindAsync(id);
+            var prescricoes = await _context.Prescricoes.Select(e => new PrescricoesViewModel
+            {
+                Id = e.Id,
+                Descricao = e.Descricao,
+                Estado = e.Estado ? "Válido": "Expirado",
+                Data = e.Data.ToString("dd/MM/yyyy"),
+                Diagnostico = e.Diagnostico.Titulo
+            }).Where(a => a.Id == id).FirstOrDefaultAsync();
 
             if (prescricoes == null)
             {

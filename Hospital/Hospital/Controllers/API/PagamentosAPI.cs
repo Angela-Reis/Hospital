@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Hospital.Data;
 using Hospital.Models;
+using Hospital.Models.APIViewModels;
 
 namespace Hospital.Controllers.API
 {
@@ -23,16 +24,36 @@ namespace Hospital.Controllers.API
 
         // GET: api/PagamentosAPI
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Pagamentos>>> GetPagamentos()
-        {
-            return await _context.Pagamentos.ToListAsync();
+        public async Task<ActionResult<IEnumerable<PagamentoViewModel>>> GetPagamentos()
+        { 
+            return await _context.Pagamentos.Select(p => new PagamentoViewModel
+            {
+                Id = p.Id,
+                Valor = p.Valor + "€",
+                Estado = p.Estado ? "Pago" : "Aguarda Pagamento",
+                Descricao = p.Descricao,
+                DataEfetuado = p.DataEfetuado.HasValue ? p.DataEfetuado.Value.ToString("dd/MM/yyyy") : string.Empty,
+                Metodo = p.Metodo,
+                Consulta = p.Consulta.Medico.NumCedulaProf + " " + p.Consulta.Data.ToString("dd/MM/yyyy")
+            } ).OrderBy(p => p.Estado).ToListAsync();
         }
 
         // GET: api/PagamentosAPI/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Pagamentos>> GetPagamentos(int id)
+        public async Task<ActionResult<PagamentoViewModel>> GetPagamentos(int id)
         {
-            var pagamentos = await _context.Pagamentos.FindAsync(id);
+            var pagamentos = await _context.Pagamentos.Select(p => new PagamentoViewModel
+            {
+                Id = p.Id,
+                Valor = p.Valor + "€",
+                Estado = p.Estado ? "Pago" : "Aguarda Pagamento",
+                Descricao = p.Descricao,
+                DataEfetuado = p.DataEfetuado.HasValue ? p.DataEfetuado.Value.ToString("dd/MM/yyyy") : string.Empty,
+                Metodo = p.Metodo,
+                Consulta = p.Consulta.Medico.NumCedulaProf + " " + p.Consulta.Data.ToString("dd/MM/yyyy hh:yyyy")
+            })
+                .Where(a => a.Id == id)
+                                .FirstOrDefaultAsync();
 
             if (pagamentos == null)
             {

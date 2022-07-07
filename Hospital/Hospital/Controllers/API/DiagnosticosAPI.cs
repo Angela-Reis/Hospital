@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Hospital.Data;
 using Hospital.Models;
+using Hospital.Models.APIViewModels;
 
 namespace Hospital.Controllers.API
 {
@@ -23,16 +24,35 @@ namespace Hospital.Controllers.API
 
         // GET: api/DiagnosticosAPI
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Diagnosticos>>> GetDiagnosticos()
+        public async Task<ActionResult<IEnumerable<DiagnosticosViewModel>>> GetDiagnosticos()
         {
-            return await _context.Diagnosticos.ToListAsync();
+            return await _context.Diagnosticos.Include(x => x.ListaConsultas).ThenInclude(x => x.Utente)
+                .Select(d => new DiagnosticosViewModel
+                {
+                    Id = d.Id,
+                    Titulo = d.Titulo,
+                    Estado = d.Estado,
+                    Descricao = d.Descricao,
+                    Utente = d.ListaConsultas
+                          .Select(u => u.Utente.Nome + "(Utente: " + u.Utente.NumUtente + ")").First()
+                }).ToListAsync();
         }
 
         // GET: api/DiagnosticosAPI/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Diagnosticos>> GetDiagnosticos(int id)
+        public async Task<ActionResult<DiagnosticosViewModel>> GetDiagnosticos(int id)
         {
-            var diagnosticos = await _context.Diagnosticos.FindAsync(id);
+            var diagnosticos = await _context.Diagnosticos.Include(x => x.ListaConsultas).ThenInclude(x => x.Utente)
+                .Select(d => new DiagnosticosViewModel
+                {
+                    Id = d.Id,
+                    Titulo = d.Titulo,
+                    Estado = d.Estado,
+                    Descricao = d.Descricao,
+                    Utente = d.ListaConsultas
+                          .Select(u => u.Utente.Nome + "(Utente: " + u.Utente.Nome + ")").First()
+                })
+                .Where(a => a.Id == id).FirstOrDefaultAsync();
 
             if (diagnosticos == null)
             {
