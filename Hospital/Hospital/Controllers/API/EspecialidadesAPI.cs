@@ -90,10 +90,29 @@ namespace Hospital.Controllers.API
         // POST: api/EspecialidadesAPI
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Especialidades>> PostEspecialidades(Especialidades especialidades)
+        public async Task<ActionResult<Especialidades>> PostEspecialidades([FromForm] Especialidades especialidades, [FromForm] string[] medicosId)
         {
-            _context.Especialidades.Add(especialidades);
-            await _context.SaveChangesAsync();
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Add(especialidades);
+                    //converte os id de string para int
+                    int[] medicoIdInt = Array.ConvertAll(medicosId, i => int.Parse(i));
+                    foreach (int medicoId in medicoIdInt)
+                    {
+                        var medico = _context.Medicos
+                                    .Include(p => p.ListaEspecialidades)
+                                    .Single(p => p.Id == medicoId);
+                        medico.ListaEspecialidades.Add(especialidades);
+                    }
+                    await _context.SaveChangesAsync();
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            }
 
             return CreatedAtAction("GetEspecialidades", new { id = especialidades.Id }, especialidades);
         }
