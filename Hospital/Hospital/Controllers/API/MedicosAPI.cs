@@ -16,10 +16,12 @@ namespace Hospital.Controllers.API
     public class MedicosAPI : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public MedicosAPI(ApplicationDbContext context)
+        public MedicosAPI(ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         // GET: api/MedicosAPI
@@ -97,12 +99,72 @@ namespace Hospital.Controllers.API
         // POST: api/MedicosAPI
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Medicos>> PostMedicos(Medicos medicos)
+        public async Task<ActionResult<Medicos>> PostMedicos([FromForm] Medicos medicos, [FromForm] string[] especialidadeId, IFormFile novaFotoMed)
         {
-            _context.Medicos.Add(medicos);
-            await _context.SaveChangesAsync();
+            if (novaFotoMed == null)
+            {
+                medicos.Foto = "semFoto.png";
+            }
+            else
+            {
+                //verificar se o ficheiro recebudo é uma imagem
+                if (!(novaFotoMed.ContentType == "image/jpeg" || novaFotoMed.ContentType == "image/png"))
+                {
+                    // Mostra um erro
+                    return BadRequest();
+                }
+                else
+                {
+                    // define image name
+                    Guid g = Guid.NewGuid();
+                    string nomeImg = medicos.NumCedulaProf + "_GUID" + g.ToString();
+                    string tipoImagem = Path.GetExtension(novaFotoMed.FileName).ToLower();
+                    nomeImg += tipoImagem;
+                    // add image name to vet data
+                    medicos.Foto = nomeImg;
+                }
+            }
+            if (ModelState.IsValid)
+            {
+                int[] especialidadesId = Array.ConvertAll(especialidadeId, i => int.Parse(i));
+                _context.Add(medicos);
+                foreach (int especId in especialidadesId)
+                {
+                    var especialidade = await _context.Especialidades.Include(e => e.ListaMedicos).SingleAsync(e => e.Id == especId);
+                    especialidade.ListaMedicos.Add(medicos);
+                }
+                await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetMedicos", new { id = medicos.Id }, medicos);
+                // guarda o ficheiro da imagem no disco
+                if (novaFotoMed != null)
+                {
+                    // pergunta ao servidor o endereço usar
+                    string addressGuardarFicheiro = _webHostEnvironment.WebRootPath;
+                    string novaLocalFicheiro = Path.Combine(addressGuardarFicheiro, "Fotos//Medicos");
+                    // verifica se a diretoria existe
+                    if (!Directory.Exists(novaLocalFicheiro))
+                    {
+                        Directory.CreateDirectory(novaLocalFicheiro);
+                    }
+                    // guarda imagem no disco
+                    novaLocalFicheiro = Path.Combine(novaLocalFicheiro, medicos.Foto);
+                    using var stream = new FileStream(novaLocalFicheiro, FileMode.Create);
+                    await novaFotoMed.CopyToAsync(stream);
+                }
+                //medico contém uma lista de especialidades que estava a criar ciclo infinito, logo criar novo medico sem a lista
+                return CreatedAtAction("GetMedicos", new { id = medicos.Id }, new Medicos
+                {
+                    Id = medicos.Id,
+                    Nome = medicos.Nome,
+                    NumCedulaProf = medicos.NumCedulaProf,
+                    NumTelefone = medicos.NumTelefone,
+                    Email = medicos.Email,
+                    DataNascimento = medicos.DataNascimento,
+                    Foto = medicos.Foto,
+                });
+            }
+            return BadRequest();
+
         }
 
         // DELETE: api/MedicosAPI/5
@@ -113,6 +175,19 @@ namespace Hospital.Controllers.API
             if (medicos == null)
             {
                 return NotFound();
+            }
+            // pergunta ao servidor o endereço usar
+            string addresoApp = _webHostEnvironment.WebRootPath;
+            string localFicheiro = Path.Combine(addresoApp, "Fotos//Medicos");
+
+            //Apaga Foto-----------------------------------------------
+            if (Directory.Exists(localFicheiro) && !medicos.Foto.Equals("semFoto.png"))
+            {
+                FileInfo imgAntiga = new FileInfo(Path.Combine(localFicheiro, medicos.Foto));
+                if (imgAntiga.Exists)//verifica se o ficheiro existe
+                {
+                    imgAntiga.Delete();//se existir elimina
+                }
             }
 
             _context.Medicos.Remove(medicos);

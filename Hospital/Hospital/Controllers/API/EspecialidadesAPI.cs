@@ -27,7 +27,7 @@ namespace Hospital.Controllers.API
         public async Task<ActionResult<IEnumerable<EspecialidadesViewModel>>> GetEspecialidades()
         {
 
-            return await _context.Especialidades.Include(x => x.ListaMedicos)
+            return await _context.Especialidades
                 .Select(e => new EspecialidadesViewModel
                 {
                     Id = e.Id,
@@ -95,17 +95,16 @@ namespace Hospital.Controllers.API
             if (ModelState.IsValid)
             {
                 try
-                {
-                    _context.Add(especialidades);
-                    //converte os id de string para int
+                {   //converte os id de string para int
                     int[] medicoIdInt = Array.ConvertAll(medicosId, i => int.Parse(i));
                     foreach (int medicoId in medicoIdInt)
                     {
                         var medico = _context.Medicos
-                                    .Include(p => p.ListaEspecialidades)
                                     .Single(p => p.Id == medicoId);
                         medico.ListaEspecialidades.Add(especialidades);
                     }
+                    _context.Add(especialidades);
+
                     await _context.SaveChangesAsync();
                 }
                 catch (Exception)
@@ -113,8 +112,8 @@ namespace Hospital.Controllers.API
                     throw;
                 }
             }
-
-            return CreatedAtAction("GetEspecialidades", new { id = especialidades.Id }, especialidades);
+            //especialidades contém a lista de medicos que estava a criar ciclo infinito, logo criar nova especialidade sem a lista
+            return CreatedAtAction("GetEspecialidades", new { id = especialidades.Id }, new Especialidades { Id=especialidades.Id, Nome=especialidades.Nome});
         }
 
         // DELETE: api/EspecialidadesAPI/5
