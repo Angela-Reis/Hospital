@@ -16,10 +16,13 @@ namespace Hospital.Controllers.API
     public class UtentesAPI : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public UtentesAPI(ApplicationDbContext context)
+
+        public UtentesAPI(ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         // GET: api/UtentesAPI
@@ -100,25 +103,81 @@ namespace Hospital.Controllers.API
         // POST: api/UtentesAPI
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Utentes>> PostUtentes(Utentes utentes)
+        public async Task<ActionResult<Utentes>> PostUtentes([FromForm] Utentes utente, IFormFile novaFoto)
         {
-            _context.Utentes.Add(utentes);
-            await _context.SaveChangesAsync();
+            if (ModelState.IsValid)
+            {
+                //se a foto não existe atribuir a foto 'semFoto.png' ao utente
+                if (novaFoto == null)
+                {
+                    utente.Foto = "semFoto.png";
+                }
+                else //se uma novo foto tiver sido selecionada pelo utilizador
+                {
+                    if (!(novaFoto.ContentType == "image/jpeg" || novaFoto.ContentType == "image/png"))
+                    {
+                        return BadRequest();
+                    }
+                    else
+                    {
+                        // define image name
+                        Guid g = Guid.NewGuid();
+                        string nomeImg = utente.NumUtente + "_GUID" + g.ToString();
+                        string tipoImagem = Path.GetExtension(novaFoto.FileName).ToLower();
+                        nomeImg += tipoImagem;
+                        // add image name to vet data
+                        utente.Foto = nomeImg;
+                    }
+                }
+                _context.Add(utente);
+                await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetUtentes", new { id = utentes.Id }, utentes);
+                // guarda o ficheiro da imagem no disco
+                if (novaFoto != null)
+                {
+                    // pergunta ao servidor o endereço usar
+                    string addressGuardarFicheiro = _webHostEnvironment.WebRootPath;
+                    string novaLocalFicheiro = Path.Combine(addressGuardarFicheiro, "Fotos//Utentes");
+                    // verifica se a diretoria existe, se não existir criar
+                    if (!Directory.Exists(novaLocalFicheiro))
+                    {
+                        Directory.CreateDirectory(novaLocalFicheiro);
+                    }
+                    // guarda imagem no disco
+                    novaLocalFicheiro = Path.Combine(novaLocalFicheiro, utente.Foto);
+                    using var stream = new FileStream(novaLocalFicheiro, FileMode.Create);
+                    await novaFoto.CopyToAsync(stream);
+                }
+
+                return CreatedAtAction("GetUtentes", new { id = utente.Id }, utente);
+            }
+            return BadRequest();
+
         }
 
         // DELETE: api/UtentesAPI/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUtentes(int id)
         {
-            var utentes = await _context.Utentes.FindAsync(id);
-            if (utentes == null)
+            var utente = await _context.Utentes.FindAsync(id);
+            if (utente == null)
             {
                 return NotFound();
             }
+            // pergunta ao servidor o endereço usar
+            string adressoApp = _webHostEnvironment.WebRootPath;
+            string localFicheiro = Path.Combine(adressoApp, "Fotos//Medicos");
 
-            _context.Utentes.Remove(utentes);
+            //Apaga Foto-----------------------------------------------
+            if (Directory.Exists(localFicheiro) && !utente.Foto.Equals("semFoto.png"))
+            {
+                FileInfo imgAntiga = new FileInfo(Path.Combine(localFicheiro, utente.Foto));
+                if (imgAntiga.Exists)//verifica se o ficheiro existe
+                {
+                    imgAntiga.Delete();//se existir elimina
+                }
+            }
+            _context.Utentes.Remove(utente);
             await _context.SaveChangesAsync();
 
             return NoContent();
