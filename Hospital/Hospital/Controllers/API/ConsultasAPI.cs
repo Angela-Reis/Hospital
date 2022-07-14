@@ -32,9 +32,9 @@ namespace Hospital.Controllers.API
                 Data = m.Data.ToString("dd/MM/yyyy HH:mm"),
                 Estado = EstadoConsulta(m.Estado),
                 Motivo = m.Motivo,
-                Utente = m.Utente.Nome + " (Utente: " + m.Utente.NumUtente + ")" ,
+                Utente = m.Utente.Nome + " (Utente: " + m.Utente.NumUtente + ")",
                 Medico = m.Medico.Nome + " (Cédula: " + m.Medico.NumCedulaProf + ")",
-                Diagnostico = m.Diagnostico.Titulo 
+                Diagnostico = m.Diagnostico.Titulo
             }).ToListAsync();
         }
 
@@ -95,12 +95,33 @@ namespace Hospital.Controllers.API
         // POST: api/ConsultasAPI
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Consultas>> PostConsultas(Consultas consultas)
+        public async Task<ActionResult<Consultas>> PostConsultas([FromForm] Consultas consulta)
         {
-            _context.Consultas.Add(consultas);
-            await _context.SaveChangesAsync();
+            Consultas backUp = consulta;
+            if (consulta != null)
+            {
+                //diagnostico que o utilizador selecionou
+                var diagnostico = _context.Diagnosticos.Include(p => p.ListaConsultas).ThenInclude(c => c.Utente).Single(p => p.Id == consulta.DiagnosticoFK);
+                //verificar o numero de utentes com a consulta
+                int numUtentes = diagnostico.ListaConsultas.Select(u => u.Utente.Id).Distinct().Count();
+                //se for maior que 1, quer dizer que este diagnóstico já pertence a outro utente
+                if (numUtentes != 1)
+                {
+                    return BadRequest();
+                }
+            }
 
-            return CreatedAtAction("GetConsultas", new { id = consultas.Id }, consultas);
+            try
+            {
+                _context.Consultas.Add(consulta);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                throw;
+            }
+
+            return CreatedAtAction("GetConsultas", new { id = consulta.Id }, backUp.Id = consulta.Id);
         }
 
         // DELETE: api/ConsultasAPI/5
@@ -139,7 +160,6 @@ namespace Hospital.Controllers.API
                 default:
                     return "Desconhecido";
             }
-            return "Desconhecido";
         }
     }
 }
