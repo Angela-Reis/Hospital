@@ -6,6 +6,7 @@ namespace Hospital.Models.APIViewModels
     public class UtentesViewModel
     {
         public int Id { get; set; }
+        public string Label { get; set; }
         public string Nome { get; set; }
         public string NumUtente { get; set; }
         public string NIF { get; set; }

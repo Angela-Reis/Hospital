@@ -32,6 +32,7 @@ namespace Hospital.Controllers.API
             return await _context.Utentes.Select(m => new UtentesViewModel
             {
                 Id = m.Id,
+                Label = m.Nome + "(Utente: " + m.NumUtente + ")",
                 Nome = m.Nome,
                 NumUtente = m.NumUtente,
                 NIF = m.NIF,

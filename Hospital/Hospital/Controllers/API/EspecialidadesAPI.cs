@@ -92,28 +92,27 @@ namespace Hospital.Controllers.API
         [HttpPost]
         public async Task<ActionResult<Especialidades>> PostEspecialidades([FromForm] Especialidades especialidades, [FromForm] string[] medicosId)
         {
-            if (ModelState.IsValid)
-            {
-                try
-                {   //converte os id de string para int
-                    int[] medicoIdInt = Array.ConvertAll(medicosId, i => int.Parse(i));
-                    foreach (int medicoId in medicoIdInt)
-                    {
-                        var medico = _context.Medicos
-                                    .Single(p => p.Id == medicoId);
-                        medico.ListaEspecialidades.Add(especialidades);
-                    }
-                    _context.Add(especialidades);
 
-                    await _context.SaveChangesAsync();
-                }
-                catch (Exception)
+            try
+            {   //converte os id de string para int
+                int[] medicoIdInt = Array.ConvertAll(medicosId, i => int.Parse(i));
+                foreach (int medicoId in medicoIdInt)
                 {
-                    throw;
+                    var medico = _context.Medicos
+                                .Single(p => p.Id == medicoId);
+                    medico.ListaEspecialidades.Add(especialidades);
                 }
+                _context.Add(especialidades);
+
+                await _context.SaveChangesAsync();
             }
+            catch (Exception)
+            {
+                throw;
+            }
+
             //especialidades contém a lista de medicos que estava a criar ciclo infinito, logo criar nova especialidade sem a lista
-            return CreatedAtAction("GetEspecialidades", new { id = especialidades.Id }, new Especialidades { Id=especialidades.Id, Nome=especialidades.Nome});
+            return CreatedAtAction("GetEspecialidades", new { id = especialidades.Id }, new Especialidades { Id = especialidades.Id, Nome = especialidades.Nome });
         }
 
         // DELETE: api/EspecialidadesAPI/5

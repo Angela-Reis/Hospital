@@ -32,6 +32,7 @@ namespace Hospital.Controllers.API
                             .Select(m => new MedicosViewModel
                             {
                                 Id = m.Id,
+                                Label = m.Nome + "(Cédula: " + m.NumCedulaProf + ")",
                                 Nome = m.Nome,
                                 NumCedulaProf = m.NumCedulaProf,
                                 NumTelefone = m.NumTelefone,
@@ -124,45 +125,43 @@ namespace Hospital.Controllers.API
                     medicos.Foto = nomeImg;
                 }
             }
-            if (ModelState.IsValid)
+            int[] especialidadesId = Array.ConvertAll(especialidadeId, i => int.Parse(i));
+            _context.Add(medicos);
+            foreach (int especId in especialidadesId)
             {
-                int[] especialidadesId = Array.ConvertAll(especialidadeId, i => int.Parse(i));
-                _context.Add(medicos);
-                foreach (int especId in especialidadesId)
-                {
-                    var especialidade = await _context.Especialidades.Include(e => e.ListaMedicos).SingleAsync(e => e.Id == especId);
-                    especialidade.ListaMedicos.Add(medicos);
-                }
-                await _context.SaveChangesAsync();
-
-                // guarda o ficheiro da imagem no disco
-                if (novaFotoMed != null)
-                {
-                    // pergunta ao servidor o endereço usar
-                    string addressGuardarFicheiro = _webHostEnvironment.WebRootPath;
-                    string novaLocalFicheiro = Path.Combine(addressGuardarFicheiro, "Fotos//Medicos");
-                    // verifica se a diretoria existe
-                    if (!Directory.Exists(novaLocalFicheiro))
-                    {
-                        Directory.CreateDirectory(novaLocalFicheiro);
-                    }
-                    // guarda imagem no disco
-                    novaLocalFicheiro = Path.Combine(novaLocalFicheiro, medicos.Foto);
-                    using var stream = new FileStream(novaLocalFicheiro, FileMode.Create);
-                    await novaFotoMed.CopyToAsync(stream);
-                }
-                //medico contém uma lista de especialidades que estava a criar ciclo infinito, logo criar novo medico sem a lista
-                return CreatedAtAction("GetMedicos", new { id = medicos.Id }, new Medicos
-                {
-                    Id = medicos.Id,
-                    Nome = medicos.Nome,
-                    NumCedulaProf = medicos.NumCedulaProf,
-                    NumTelefone = medicos.NumTelefone,
-                    Email = medicos.Email,
-                    DataNascimento = medicos.DataNascimento,
-                    Foto = medicos.Foto,
-                });
+                var especialidade = await _context.Especialidades.Include(e => e.ListaMedicos).SingleAsync(e => e.Id == especId);
+                especialidade.ListaMedicos.Add(medicos);
             }
+            await _context.SaveChangesAsync();
+
+            // guarda o ficheiro da imagem no disco
+            if (novaFotoMed != null)
+            {
+                // pergunta ao servidor o endereço usar
+                string addressGuardarFicheiro = _webHostEnvironment.WebRootPath;
+                string novaLocalFicheiro = Path.Combine(addressGuardarFicheiro, "Fotos//Medicos");
+                // verifica se a diretoria existe
+                if (!Directory.Exists(novaLocalFicheiro))
+                {
+                    Directory.CreateDirectory(novaLocalFicheiro);
+                }
+                // guarda imagem no disco
+                novaLocalFicheiro = Path.Combine(novaLocalFicheiro, medicos.Foto);
+                using var stream = new FileStream(novaLocalFicheiro, FileMode.Create);
+                await novaFotoMed.CopyToAsync(stream);
+            }
+            //medico contém uma lista de especialidades que estava a criar ciclo infinito, logo criar novo medico sem a lista
+            return CreatedAtAction("GetMedicos", new { id = medicos.Id }, new Medicos
+            {
+                Id = medicos.Id,
+                Nome = medicos.Nome,
+                NumCedulaProf = medicos.NumCedulaProf,
+                NumTelefone = medicos.NumTelefone,
+                Email = medicos.Email,
+                DataNascimento = medicos.DataNascimento,
+                Foto = medicos.Foto,
+            });
+
             return BadRequest();
 
         }

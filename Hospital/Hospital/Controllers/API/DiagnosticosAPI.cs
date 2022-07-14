@@ -30,11 +30,11 @@ namespace Hospital.Controllers.API
                 .Select(d => new DiagnosticosViewModel
                 {
                     Id = d.Id,
+                    Label = d.Titulo + "(Utente: " + d.ListaConsultas.Select(u => u.Utente.NumUtente).First() + ")",
                     Titulo = d.Titulo,
                     Estado = d.Estado,
                     Descricao = d.Descricao,
-                    Utente = d.ListaConsultas
-                          .Select(u => u.Utente.Nome + "(Utente: " + u.Utente.NumUtente + ")").First()
+                    Utente = d.ListaConsultas.Select(u => u.Utente.Nome + "(Utente: " + u.Utente.NumUtente + ")").First()
                 }).ToListAsync();
         }
 
@@ -46,11 +46,11 @@ namespace Hospital.Controllers.API
                 .Select(d => new DiagnosticosViewModel
                 {
                     Id = d.Id,
+                    Label = d.Titulo + "(Utente: " + d.ListaConsultas.Select(u => u.Utente.NumUtente).First() + ")",
                     Titulo = d.Titulo,
                     Estado = d.Estado,
                     Descricao = d.Descricao,
-                    Utente = d.ListaConsultas
-                          .Select(u => u.Utente.Nome + "(Utente: " + u.Utente.Nome + ")").First()
+                    Utente = d.ListaConsultas.Select(u => u.Utente.Nome + "(Utente: " + u.Utente.NumUtente + ")").First()
                 })
                 .Where(a => a.Id == id).FirstOrDefaultAsync();
 
@@ -98,6 +98,11 @@ namespace Hospital.Controllers.API
         [HttpPost]
         public async Task<ActionResult<Diagnosticos>> PostDiagnosticos(Diagnosticos diagnosticos)
         {
+            int numUtentes = diagnosticos.ListaConsultas.Select(u => u.Utente.Id).Distinct().Count();
+            if (numUtentes != 1)
+            {
+                return BadRequest();
+            }
             _context.Diagnosticos.Add(diagnosticos);
             await _context.SaveChangesAsync();
 

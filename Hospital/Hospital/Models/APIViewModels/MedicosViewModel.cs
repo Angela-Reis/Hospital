@@ -7,6 +7,7 @@ namespace Hospital.Models.APIViewModels
     public class MedicosViewModel
     {
         public int Id { get; set; }
+        public string Label { get; set; }
         public string Nome { get; set; }
         public string NumCedulaProf { get; set; }
         public string NumTelefone { get; set; }
