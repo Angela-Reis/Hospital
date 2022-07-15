@@ -29,6 +29,7 @@ namespace Hospital.Controllers.API
             return await _context.Consultas.Include(c => c.Diagnostico).Select(m => new ConsultasViewModel
             {
                 Id = m.Id,
+                Label = m.Data.ToString("dd/MM/yyyy HH:mm") +" (Utente: " + m.Utente.NumUtente + ")",
                 Data = m.Data.ToString("dd/MM/yyyy HH:mm"),
                 Estado = EstadoConsulta(m.Estado),
                 Motivo = m.Motivo,
@@ -46,6 +47,7 @@ namespace Hospital.Controllers.API
             {
                 Id = m.Id,
                 Data = m.Data.ToString("dd/MM/yyyy HH:mm"),
+                Label = m.Data.ToString("dd/MM/yyyy HH:mm") + " (Utente: " + m.Utente.NumUtente + ")",
                 Estado = EstadoConsulta(m.Estado),
                 Motivo = m.Motivo,
                 Utente = m.Utente.Nome + " (Utente: " + m.Utente.NumUtente + ")",

@@ -6,6 +6,7 @@ namespace Hospital.Models.APIViewModels
     public class ConsultasViewModel
     {
         public int Id { get; set; }
+        public string Label { get; set; }
         public string Data { get; set; }
         public string Motivo { get; set; }
         public string Estado { get; set; }
