@@ -38,7 +38,7 @@ namespace Hospital.Models
         /// T=Tratamento, F=Tratado, C=Cronico
         /// </summary>
         [Required(ErrorMessage = "O {0} é de preenchimento obrigatório")]
-        [RegularExpression("[TtFfCc]", ErrorMessage = "Só pode usar T, F, ou C, no campo {0}, sendo que correspondem a em tratamento, finalazido ou cronico respetivamente")]
+        [RegularExpression("[TtFfCc]", ErrorMessage = "Só pode usar T, F, ou C, no campo {0}, sendo que correspondem a em tratamento, finalazido(Curado) ou Crónico respetivamente")]
         [StringLength(1, ErrorMessage = "O {0} não pode ter mais do que {1} caracteres")]
         public string Estado { get; set; }
 

@@ -96,15 +96,19 @@ namespace Hospital.Controllers.API
         // POST: api/DiagnosticosAPI
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Diagnosticos>> PostDiagnosticos(Diagnosticos diagnosticos)
+        public async Task<ActionResult<Diagnosticos>> PostDiagnosticos([FromForm] Diagnosticos diagnosticos)
         {
-            int numUtentes = diagnosticos.ListaConsultas.Select(u => u.Utente.Id).Distinct().Count();
-            if (numUtentes != 1)
+
+            try
             {
-                return BadRequest();
+                _context.Diagnosticos.Add(diagnosticos);
+                await _context.SaveChangesAsync();
             }
-            _context.Diagnosticos.Add(diagnosticos);
-            await _context.SaveChangesAsync();
+            catch (Exception)
+            {
+                throw;
+            }
+
 
             return CreatedAtAction("GetDiagnosticos", new { id = diagnosticos.Id }, diagnosticos);
         }
@@ -113,14 +117,21 @@ namespace Hospital.Controllers.API
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteDiagnosticos(int id)
         {
-            var diagnosticos = await _context.Diagnosticos.FindAsync(id);
-            if (diagnosticos == null)
+            try
             {
-                return NotFound();
-            }
+                var diagnosticos = await _context.Diagnosticos.FindAsync(id);
+                if (diagnosticos == null)
+                {
+                    return NotFound();
+                }
 
-            _context.Diagnosticos.Remove(diagnosticos);
-            await _context.SaveChangesAsync();
+                _context.Diagnosticos.Remove(diagnosticos);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
 
             return NoContent();
         }
