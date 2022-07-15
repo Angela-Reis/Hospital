@@ -32,7 +32,7 @@ namespace Hospital.Controllers.API
                 Descricao = e.Descricao,
                 Estado = e.Estado ? "Válida" : "Expirada",
                 Data = e.Data.ToString("dd/MM/yyyy"),
-                Diagnostico = e.Diagnostico.Titulo
+                Diagnostico = e.Diagnostico.Titulo + e.Diagnostico.ListaConsultas.Select(u => " (Utente: " + u.Utente.NumUtente + ")").First()
             }).ToListAsync(); ;
         }
 
@@ -44,7 +44,7 @@ namespace Hospital.Controllers.API
             {
                 Id = e.Id,
                 Descricao = e.Descricao,
-                Estado = e.Estado ? "Válido": "Expirado",
+                Estado = e.Estado ? "Válido" : "Expirado",
                 Data = e.Data.ToString("dd/MM/yyyy"),
                 Diagnostico = e.Diagnostico.Titulo
             }).Where(a => a.Id == id).FirstOrDefaultAsync();
@@ -91,12 +91,19 @@ namespace Hospital.Controllers.API
         // POST: api/PrescricoesAPI
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Prescricoes>> PostPrescricoes(Prescricoes prescricoes)
+        public async Task<ActionResult<Prescricoes>> PostPrescricoes([FromForm] Prescricoes prescricoes)
         {
-            _context.Prescricoes.Add(prescricoes);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetPrescricoes", new { id = prescricoes.Id }, prescricoes);
+            Prescricoes backup = prescricoes;
+            try
+            {
+                _context.Prescricoes.Add(prescricoes);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return CreatedAtAction("GetPrescricoes", new { id = prescricoes.Id }, backup.Id = prescricoes.Id);
         }
 
         // DELETE: api/PrescricoesAPI/5
