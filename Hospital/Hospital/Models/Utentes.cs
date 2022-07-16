@@ -10,7 +10,6 @@ namespace Hospital.Models
         
         public Utentes()
         {
-            ListaPagamentos = new HashSet<Pagamentos>();
             ListaConsultas = new HashSet<Consultas>();
         }
 
@@ -81,11 +80,6 @@ namespace Hospital.Models
         /// Foto do Utente
         /// </summary>
         public string Foto { get; set; }
-
-        /// <summary>
-        /// Lista dos Pagamentos do Utente
-        /// </summary>
-        public ICollection<Pagamentos> ListaPagamentos { get; set; }
 
         /// <summary>
         /// Lista das Consultas do Utente

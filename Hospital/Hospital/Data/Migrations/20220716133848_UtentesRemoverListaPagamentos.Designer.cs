@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hospital.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220630014527_CorrigirSeedPagamentos")]
-    partial class CorrigirSeedPagamentos
+    [Migration("20220716133848_UtentesRemoverListaPagamentos")]
+    partial class UtentesRemoverListaPagamentos
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -173,17 +173,17 @@ namespace Hospital.Data.Migrations
                         {
                             Id = "a370779b-8777-4d3b-a96c-7a94d217e355",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "d39f2cbd-c41e-4562-8d7d-e994ca7d6796",
-                            DataRegistro = new DateTime(2022, 6, 30, 2, 45, 26, 746, DateTimeKind.Local).AddTicks(7716),
+                            ConcurrencyStamp = "1a2ab385-9965-4182-8d20-878ee3b04f80",
+                            DataRegistro = new DateTime(2022, 7, 16, 14, 38, 48, 188, DateTimeKind.Local).AddTicks(904),
                             Email = "admin@admin.com",
                             EmailConfirmed = true,
                             LockoutEnabled = true,
                             Nome = "Admin",
                             NormalizedEmail = "ADMIN@ADMIN.COM",
                             NormalizedUserName = "ADMIN@ADMIN.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAENp1uesPUB4rAKGczpz+adUOnKa6gSRng18qu6NBOn3viV3kXMZRvjej2KeXmGs09A==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEA6rhrlQYR9U6opih6MFIGoJ1SOsyNRecWs6ylmB4R051VusWK2UAhr+I6mOzW6T4g==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "816ca4b3-30e8-4781-9269-a8e0abe148c0",
+                            SecurityStamp = "25acb752-7e79-4098-996d-b4dcac199892",
                             TwoFactorEnabled = false,
                             UserName = "admin@admin.com"
                         },
@@ -191,17 +191,17 @@ namespace Hospital.Data.Migrations
                         {
                             Id = "93b9ebd2-3f4d-4009-8d8b-3a3404f85628",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "cc2b3302-0865-41ce-bf0b-52233b79be4b",
-                            DataRegistro = new DateTime(2022, 6, 30, 2, 45, 26, 753, DateTimeKind.Local).AddTicks(1220),
+                            ConcurrencyStamp = "28ed5877-7581-4220-a22f-e83c68653090",
+                            DataRegistro = new DateTime(2022, 7, 16, 14, 38, 48, 194, DateTimeKind.Local).AddTicks(3363),
                             Email = "admin2@admin.com",
                             EmailConfirmed = true,
                             LockoutEnabled = true,
                             Nome = "Admin2",
                             NormalizedEmail = "ADMIN2@ADMIN.COM",
                             NormalizedUserName = "ADMIN2@ADMIN.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEK/M/EauVL6IpjHe6ZfzxOKWVjIdbcgjm0cN/bjRFVrkyU1fCOGmrWmqGNP8vG3U+w==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEOo/aNt6JMO6/32RRKK4ZNchczMZlxGEWbc3+V0OTa+qXD0OBys9kvUnATXMvfZTDQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "cd2ddfa3-ace8-4a85-ada5-d9b6ad27678d",
+                            SecurityStamp = "f6fa3ac7-a67c-461e-9c37-e739efe418e3",
                             TwoFactorEnabled = false,
                             UserName = "admin2@admin.com"
                         },
@@ -209,17 +209,17 @@ namespace Hospital.Data.Migrations
                         {
                             Id = "388c89b7-046e-414a-8212-1cced6e1aea1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "f9314f68-98fd-4aea-8761-8df204a5abb7",
-                            DataRegistro = new DateTime(2022, 6, 30, 2, 45, 26, 762, DateTimeKind.Local).AddTicks(6259),
+                            ConcurrencyStamp = "2c956447-cbfb-4d28-8004-f04444b3e6f2",
+                            DataRegistro = new DateTime(2022, 7, 16, 14, 38, 48, 200, DateTimeKind.Local).AddTicks(5848),
                             Email = "cardoso@email.com",
                             EmailConfirmed = true,
                             LockoutEnabled = true,
                             Nome = "Natália Cardoso",
                             NormalizedEmail = "CARDOSO@EMAIL.COM",
                             NormalizedUserName = "CARDOSO@EMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEIz+mDs99QFsivpgZvktT7WjSnWeNL2TM/LXMGtGXnU+MKKcClP+jTeNrckVB/oiFw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEL1ZLX+MTQujv33Nc8soXBz0CymbHtToUy+svjXr1F0zPjUuRyZ9LlNvkIfudTGUKA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "35f078ba-ae01-40f5-a92a-42a9a84e24d5",
+                            SecurityStamp = "79cd8603-6425-49af-857d-a18fb81f14e5",
                             TwoFactorEnabled = false,
                             UserName = "cardoso@email.com"
                         },
@@ -227,17 +227,17 @@ namespace Hospital.Data.Migrations
                         {
                             Id = "b092ad4f-06b8-427f-bc38-cab75e79fc7d",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "8e12e56f-3db5-4053-b8d1-bb332a0f8136",
-                            DataRegistro = new DateTime(2022, 6, 30, 2, 45, 26, 772, DateTimeKind.Local).AddTicks(4133),
+                            ConcurrencyStamp = "a061b29f-90ef-4011-8279-f6988ef3037e",
+                            DataRegistro = new DateTime(2022, 7, 16, 14, 38, 48, 206, DateTimeKind.Local).AddTicks(6880),
                             Email = "Luizpaz59181@email.com",
                             EmailConfirmed = true,
                             LockoutEnabled = true,
                             Nome = "Luiz Fernando da Paz",
                             NormalizedEmail = "LUIZPAZ59181@EMAIL.COM",
                             NormalizedUserName = "LUIZPAZ59181@EMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEG1OP1T2fk1pzcSxYK7vwpXjJhYZPjSASfDCJoDnFUoOAP3ngF6hBRcJd64nwTwjNw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEFoLS1GcBPUt7H+Fajg7URC4P5EQUdRzoVOo1op1erBay27fvrIy1vct/xnJoNTD6g==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "a1329bff-1a97-4924-931e-8c14db539c8c",
+                            SecurityStamp = "fa3815c2-d05a-49ba-9d25-46d5cede085f",
                             TwoFactorEnabled = false,
                             UserName = "Luizpaz59181@email.com"
                         },
@@ -245,17 +245,17 @@ namespace Hospital.Data.Migrations
                         {
                             Id = "0c88c53b-f18e-494e-88ff-1e9c2360f310",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "4f3d5ebf-0800-4dd5-98ee-909fde2f2590",
-                            DataRegistro = new DateTime(2022, 6, 30, 2, 45, 26, 779, DateTimeKind.Local).AddTicks(1488),
+                            ConcurrencyStamp = "e000812b-e146-47b3-8fd5-da53b6966381",
+                            DataRegistro = new DateTime(2022, 7, 16, 14, 38, 48, 212, DateTimeKind.Local).AddTicks(8228),
                             Email = "Henriques82648@email.com",
                             EmailConfirmed = true,
                             LockoutEnabled = true,
                             Nome = "João Henriques",
                             NormalizedEmail = "HENRIQUES82648@EMAIL.COM",
                             NormalizedUserName = "JOÃO HENRIQUES",
-                            PasswordHash = "AQAAAAEAACcQAAAAEP04JMC4WlUz+wrJgadbdv8lvKHX3PLJRyPoGKO4XU459S7vmMqr3wkYk13KC0VsPQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEKGW+Q84z2ediCqc+OcXuzxhZbNaK/jLzrOxJ1qVBElAAB5CbPnt7sRnJCinH7grCg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "e2e8a113-072d-4212-875c-697127c09282",
+                            SecurityStamp = "fbe40b83-2714-4ace-a93b-575cb5b87a9e",
                             TwoFactorEnabled = false,
                             UserName = "João Henriques"
                         },
@@ -263,17 +263,17 @@ namespace Hospital.Data.Migrations
                         {
                             Id = "2db0257a-446d-4886-b46e-3f6246610080",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "3f7549f7-0643-4770-befa-9dd64dc12c66",
-                            DataRegistro = new DateTime(2022, 6, 30, 2, 45, 26, 785, DateTimeKind.Local).AddTicks(5293),
+                            ConcurrencyStamp = "a4cdd7bf-2d6d-4715-9130-9ef023734ea2",
+                            DataRegistro = new DateTime(2022, 7, 16, 14, 38, 48, 218, DateTimeKind.Local).AddTicks(8809),
                             Email = "MarceloFerreira@email.com",
                             EmailConfirmed = true,
                             LockoutEnabled = true,
                             Nome = "Marcelo Ferreira",
                             NormalizedEmail = "MARCELOFERREIRA@EMAIL.COM",
                             NormalizedUserName = "MARCELOFERREIRA@EMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEMyn6Y/j8p4HTpugjIbF5XKjAHvDS6bZ15Vk5PZHpN1sF6CoyRufw3lWFDSoAcQ52A==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEDjeswkM3FjvnJmiDbsm06TID5AApyaOAFILQAX+vtcwl1veDPkjDsgVCpu866NYHQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "c6eb88de-317e-4def-85be-40ae7b767b1d",
+                            SecurityStamp = "545635e0-9fb8-4a4e-b963-dcc6cc5ce6ee",
                             TwoFactorEnabled = false,
                             UserName = "MarceloFerreira@email.com"
                         },
@@ -281,17 +281,17 @@ namespace Hospital.Data.Migrations
                         {
                             Id = "773922b7-74c3-4e4c-8097-fd7468ec8315",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "cfcda908-cf7a-457a-a339-1d26f8bf1bb7",
-                            DataRegistro = new DateTime(2022, 6, 30, 2, 45, 26, 803, DateTimeKind.Local).AddTicks(7940),
+                            ConcurrencyStamp = "8e0326ec-47bc-4e52-9e32-c3dde44f0e42",
+                            DataRegistro = new DateTime(2022, 7, 16, 14, 38, 48, 225, DateTimeKind.Local).AddTicks(399),
                             Email = "GabHenriques@email.com",
                             EmailConfirmed = true,
                             LockoutEnabled = true,
                             Nome = "Gabriel Henriques",
                             NormalizedEmail = "GABHENRIQUES@EMAIL.COM",
                             NormalizedUserName = "GABHENRIQUES@EMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEC05yaK0rWmG66Fu+Ctv+hT1PnUw82nHy7n7LwJEEylxJ2UY787vKqojjk/yVEySvw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEKg1GEqTZm/IEvl/3gDEHRPHiVM8k8jK4jZ1HVdD+Z5qVpe0oVi0l8q3m754tgx0aw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "358bc881-e375-4d62-b044-f0c9e9cabd95",
+                            SecurityStamp = "ed0c2e0b-6725-47aa-8dfe-2d39be372b3b",
                             TwoFactorEnabled = false,
                             UserName = "GabHenriques@email.com"
                         },
@@ -299,17 +299,17 @@ namespace Hospital.Data.Migrations
                         {
                             Id = "db9792d7-d293-49b5-be8d-03ccf60d0e33",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "65011658-d556-4e94-b7cf-5111c58c88a2",
-                            DataRegistro = new DateTime(2022, 6, 30, 2, 45, 26, 813, DateTimeKind.Local).AddTicks(9545),
+                            ConcurrencyStamp = "b7eab589-b07c-4f66-8771-1f2a9be22965",
+                            DataRegistro = new DateTime(2022, 7, 16, 14, 38, 48, 231, DateTimeKind.Local).AddTicks(1136),
                             Email = "Carvalho69791@email.com",
                             EmailConfirmed = true,
                             LockoutEnabled = true,
                             Nome = "David Carvalho",
                             NormalizedEmail = "CARVALHO69791@EMAIL.COM",
                             NormalizedUserName = "CARVALHO69791@EMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEAXLwlBs6+K8H8hzQsTvxeDrCBDvPE2IfDQyGs21NFG7Zv4t3jre6TBYZYTVnw2CQA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAECFQxPwlpotiNrF/SI+UjZCpgLu9zyzA1MRuEuSAVi9bqbpmkvGD8skdlNM/vMgRfg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "adfc906a-d6c1-456b-96e8-401b08846798",
+                            SecurityStamp = "4b7f2460-c550-480b-a8d6-5f8e6855f304",
                             TwoFactorEnabled = false,
                             UserName = "Carvalho69791@email.com"
                         },
@@ -317,17 +317,17 @@ namespace Hospital.Data.Migrations
                         {
                             Id = "e0585d26-607c-46d3-9eea-9c1c2708c7e1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "cdbfec02-6d70-4225-a956-0a712f603e4d",
-                            DataRegistro = new DateTime(2022, 6, 30, 2, 45, 26, 820, DateTimeKind.Local).AddTicks(7059),
+                            ConcurrencyStamp = "971267bb-4a92-431d-a107-95a5d19c102d",
+                            DataRegistro = new DateTime(2022, 7, 16, 14, 38, 48, 237, DateTimeKind.Local).AddTicks(1297),
                             Email = "Nogueira@email.com",
                             EmailConfirmed = true,
                             LockoutEnabled = true,
                             Nome = "Carolina Nogueira",
                             NormalizedEmail = "NOGUEIRA@EMAIL.COM",
                             NormalizedUserName = "NOGUEIRA@EMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEEpFWvqR8NMLBIqdHj6+7jHlUsMUVUNwDBTla/Oh4Cd++uD7WhSMtwSjgSn82prxIw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEO9rKniuDAJcUbSxuVAr+AMzCJxrNurufW9d9cvIn5pXYlkSBea8SK7TmGrFL8kVbA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "3e945c7b-ee3d-43d1-8c27-0e95c7e4bb71",
+                            SecurityStamp = "2d45171a-6545-4f4e-8629-c42b2624a375",
                             TwoFactorEnabled = false,
                             UserName = "Nogueira@email.com"
                         },
@@ -335,17 +335,17 @@ namespace Hospital.Data.Migrations
                         {
                             Id = "10450067-5f19-44c7-8be1-388e8a6bdb30",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "b2517871-7ea0-4798-a4c1-4e7bdcfcd6b1",
-                            DataRegistro = new DateTime(2022, 6, 30, 2, 45, 26, 826, DateTimeKind.Local).AddTicks(9584),
+                            ConcurrencyStamp = "2913e9e5-286a-4b1e-b247-45b256c0a4bb",
+                            DataRegistro = new DateTime(2022, 7, 16, 14, 38, 48, 243, DateTimeKind.Local).AddTicks(2158),
                             Email = "Fernando60603@email.com",
                             EmailConfirmed = true,
                             LockoutEnabled = true,
                             Nome = "João Fernando",
                             NormalizedEmail = "FERNANDO60603@EMAIL.COM",
                             NormalizedUserName = "FERNANDO60603@EMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAELOLNQrMkAP2HMHLYDuU9IcoOYisT8dFFyR/7C5JxrthdJ97b9ylEyqZ0uF6aropiQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEEBQB5RttO44HwMuIxkAUBUZL1W9/TBi0Kwgkf7Nn2G5KGr/lWzseVV1Gmy/ffU1RQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "8fdc9b67-3e18-4a58-9fcb-7151a5a11dcf",
+                            SecurityStamp = "532a3f1b-a4a2-443f-abc7-325bcab79c88",
                             TwoFactorEnabled = false,
                             UserName = "Fernando60603@email.com"
                         },
@@ -353,17 +353,17 @@ namespace Hospital.Data.Migrations
                         {
                             Id = "29f5f36e-5f11-42a2-b0b8-de7741c7de16",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "7369becd-67cc-4f21-ae5f-d070290dca3d",
-                            DataRegistro = new DateTime(2022, 6, 30, 2, 45, 26, 833, DateTimeKind.Local).AddTicks(1435),
+                            ConcurrencyStamp = "628356ca-07c3-4ba0-820c-b334d87a9f82",
+                            DataRegistro = new DateTime(2022, 7, 16, 14, 38, 48, 249, DateTimeKind.Local).AddTicks(2513),
                             Email = "teixeira@email.com",
                             EmailConfirmed = true,
                             LockoutEnabled = true,
                             Nome = "Isabela Bentes Teixeira",
                             NormalizedEmail = "TEIXEIRA@EMAIL.COM",
                             NormalizedUserName = "TEIXEIRA@EMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEHSCgNsXCj2EhlSaSju0NCduk5bhjyRSezYDf02poNrTag1NxGbV/KUtjUFeeAr+dQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEKOuDHdDS0pu2WC3DkmFoaJ2mnoopoYPDbQuS7SO45DeWvWioynWArpmQsE3eCHVmw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "45d1e180-7f89-4710-9133-3da848c379ca",
+                            SecurityStamp = "226e0f0b-c9d8-4d5e-870f-bb6451c0ac36",
                             TwoFactorEnabled = false,
                             UserName = "teixeira@email.com"
                         },
@@ -371,17 +371,17 @@ namespace Hospital.Data.Migrations
                         {
                             Id = "a91d6e50-ec7a-442d-9278-4567dc61a0aa",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "ad39384c-231c-41ab-9c24-c4bb2119387e",
-                            DataRegistro = new DateTime(2022, 6, 30, 2, 45, 26, 839, DateTimeKind.Local).AddTicks(3915),
+                            ConcurrencyStamp = "5d11b22f-d01a-40fe-a500-a664bb6affa9",
+                            DataRegistro = new DateTime(2022, 7, 16, 14, 38, 48, 255, DateTimeKind.Local).AddTicks(3221),
                             Email = "leonardo@email.com",
                             EmailConfirmed = true,
                             LockoutEnabled = true,
                             Nome = "Leonardo Teves Dinis",
                             NormalizedEmail = "LEONARDO@EMAIL.COM",
                             NormalizedUserName = "LEONARDO@EMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEMch2cm+yOSBLZr+7IR0NURDEt4z3+SYMntgpO846Ih84e0YM3VaD+qvIsEtAPk19A==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEN0g0S1ZJQLQ0Opa6ZMlKJ0uvFLMwS1J4YQxuDBJWYQDCT58eGk7qecijU+4IRme0A==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "39b6e71b-adc5-467b-97ca-fe826e55f8fd",
+                            SecurityStamp = "b3581d65-fc0b-43c3-b727-318c0cdbb01b",
                             TwoFactorEnabled = false,
                             UserName = "leonardo@email.com"
                         },
@@ -389,17 +389,17 @@ namespace Hospital.Data.Migrations
                         {
                             Id = "18d7e29d-408f-42d7-9a27-ecc5d034d157",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "8f1ae2c4-5211-4841-b82b-b3dac0dd1a70",
-                            DataRegistro = new DateTime(2022, 6, 30, 2, 45, 26, 845, DateTimeKind.Local).AddTicks(5561),
+                            ConcurrencyStamp = "3c576d2d-91ad-4e4a-ae57-d06d96d8c75c",
+                            DataRegistro = new DateTime(2022, 7, 16, 14, 38, 48, 261, DateTimeKind.Local).AddTicks(4506),
                             Email = "belaHenriques@email.com",
                             EmailConfirmed = true,
                             LockoutEnabled = true,
                             Nome = "Anabela Calçada Henriques Aveiro",
                             NormalizedEmail = "BELAHENRIQUES@EMAIL.COM",
                             NormalizedUserName = "BELAHENRIQUES@EMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAENR+NxnJzp4aqoHQsNwy0GQ7HA0V5Of9Z8YjPALUmhw7nAfJaW9f8BF6Vu9qibtlhw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEHcjHOgqeLLPay90wFMrPl/mRN09hmiGnAjg8I+0BkKu1xFfRbrmd3AaS6VZw4YpRA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "6fc08e1d-c97a-451a-9714-46c4d96c1fbe",
+                            SecurityStamp = "82bd8315-a15a-4178-8f5b-0c0cfab12ddf",
                             TwoFactorEnabled = false,
                             UserName = "belaHenriques@email.com"
                         },
@@ -407,17 +407,17 @@ namespace Hospital.Data.Migrations
                         {
                             Id = "5db04ccb-3be8-452f-b381-47bd2277fdca",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "29475fec-a232-4cc7-a852-b609f69a9236",
-                            DataRegistro = new DateTime(2022, 6, 30, 2, 45, 26, 851, DateTimeKind.Local).AddTicks(8673),
+                            ConcurrencyStamp = "36ef9803-0074-4a90-94a5-f8ee3a8ce4a6",
+                            DataRegistro = new DateTime(2022, 7, 16, 14, 38, 48, 267, DateTimeKind.Local).AddTicks(4671),
                             Email = "joaocelso@email.com",
                             EmailConfirmed = true,
                             LockoutEnabled = true,
                             Nome = "João Celso Oliveira",
                             NormalizedEmail = "JOAOCELSO@EMAIL.COM",
                             NormalizedUserName = "JOAOCELSO@EMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAECV8BxcUm8fWwAK8RXXWu2vzNWzxDW58+RROj+ryPT1hHsQJAIzpf8WGj+7DbqRtNA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEPH+QvtABRMyHXcQjKy8n8G/DpFtU4hYfkJON9yT0+c6v+LyAXw4nFobFq6izXxhmw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "6eb2ca61-0b94-4138-beab-49e2cc3e6907",
+                            SecurityStamp = "e5a8e581-583d-4f9e-b5d4-0927d845d09d",
                             TwoFactorEnabled = false,
                             UserName = "joaocelso@email.com"
                         },
@@ -425,17 +425,17 @@ namespace Hospital.Data.Migrations
                         {
                             Id = "db43e582-e359-421d-9192-1d3ad1a57737",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "4b486048-3e0a-42ed-88c5-eeb2a238f865",
-                            DataRegistro = new DateTime(2022, 6, 30, 2, 45, 26, 858, DateTimeKind.Local).AddTicks(1568),
+                            ConcurrencyStamp = "86366f36-73a9-41d3-ac88-9cd26e681d9d",
+                            DataRegistro = new DateTime(2022, 7, 16, 14, 38, 48, 273, DateTimeKind.Local).AddTicks(5591),
                             Email = "ineshenriques@email.com",
                             EmailConfirmed = true,
                             LockoutEnabled = true,
                             Nome = "Maria Inês Silva Henriques",
                             NormalizedEmail = "INESHENRIQUES@EMAIL.COM",
                             NormalizedUserName = "INESHENRIQUES@EMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEH02JpNcQwgXaB7x0ak8z38mrWk4bD2nRMBJVw8xZdpPm5hrxKiGRA3E8JMqxGgYpw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAELcvr1+krrk+PHfwpPNaguTslYhjLFazTT10lIIjYcXqCT/1BXS/lNXa7wAAE5h/Rw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "1dea7450-f9e1-41a1-b2b4-928f223b4d41",
+                            SecurityStamp = "43367474-9e8a-481c-b189-2e3a87d79924",
                             TwoFactorEnabled = false,
                             UserName = "ineshenriques@email.com"
                         });
@@ -821,17 +821,12 @@ namespace Hospital.Data.Migrations
                     b.Property<string>("Metodo")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("UtentesId")
-                        .HasColumnType("int");
-
                     b.Property<decimal>("Valor")
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ConsultaFK");
-
-                    b.HasIndex("UtentesId");
 
                     b.ToTable("Pagamentos");
 
@@ -1103,21 +1098,21 @@ namespace Hospital.Data.Migrations
                         new
                         {
                             Id = "a",
-                            ConcurrencyStamp = "7d7dbee2-6d76-4917-bdda-c60b567ed818",
+                            ConcurrencyStamp = "f3bb8cca-9693-4838-9248-e496b8f29d30",
                             Name = "Administrativo",
                             NormalizedName = "ADMINISTRATIVO"
                         },
                         new
                         {
                             Id = "m",
-                            ConcurrencyStamp = "c7f68ae0-fe21-46c2-b3b3-a6c2cd208776",
+                            ConcurrencyStamp = "e4d347ad-d73b-487d-a7f5-0bb3eb545ee8",
                             Name = "Medico",
                             NormalizedName = "MEDICO"
                         },
                         new
                         {
                             Id = "u",
-                            ConcurrencyStamp = "d02bc915-5c42-40f1-b1f9-6b2314d58162",
+                            ConcurrencyStamp = "7c4603b6-6040-4a26-b6a6-3a121352f1ce",
                             Name = "Utente",
                             NormalizedName = "UTENTE"
                         });
@@ -1358,10 +1353,6 @@ namespace Hospital.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Hospital.Models.Utentes", null)
-                        .WithMany("ListaPagamentos")
-                        .HasForeignKey("UtentesId");
-
                     b.Navigation("Consulta");
                 });
 
@@ -1442,8 +1433,6 @@ namespace Hospital.Data.Migrations
             modelBuilder.Entity("Hospital.Models.Utentes", b =>
                 {
                     b.Navigation("ListaConsultas");
-
-                    b.Navigation("ListaPagamentos");
                 });
 #pragma warning restore 612, 618
         }
