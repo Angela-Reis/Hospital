@@ -25,7 +25,7 @@ namespace Hospital.Controllers.API
         // GET: api/PagamentosAPI
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PagamentoViewModel>>> GetPagamentos()
-        { 
+        {
             return await _context.Pagamentos.Select(p => new PagamentoViewModel
             {
                 Id = p.Id,
@@ -35,7 +35,7 @@ namespace Hospital.Controllers.API
                 DataEfetuado = p.DataEfetuado.HasValue ? p.DataEfetuado.Value.ToString("dd/MM/yyyy") : string.Empty,
                 Metodo = p.Metodo,
                 Consulta = p.Consulta.Medico.NumCedulaProf + " " + p.Consulta.Data.ToString("dd/MM/yyyy")
-            } ).OrderBy(p => p.Estado).ToListAsync();
+            }).OrderBy(p => p.Estado).ToListAsync();
         }
 
         // GET: api/PagamentosAPI/5
@@ -97,11 +97,31 @@ namespace Hospital.Controllers.API
         // POST: api/PagamentosAPI
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Pagamentos>> PostPagamentos(Pagamentos pagamentos)
+        public async Task<ActionResult<Pagamentos>> PostPagamentos([FromForm] Pagamentos pagamentos)
         {
-            _context.Pagamentos.Add(pagamentos);
-            await _context.SaveChangesAsync();
+            Pagamentos backup = pagamentos;
+            try
+            {
+                pagamentos.Valor = Convert.ToDecimal(pagamentos.AuxValor.Replace('.', ','));
+                //o facto de o pagamaento estar efetuado define se necessita ou não necessita dos campos DataEfetuado e Metodoo
+                if (!(pagamentos.Estado && (pagamentos.DataEfetuado is null || pagamentos.Metodo is null) ||
+                     !pagamentos.Estado && (pagamentos.DataEfetuado is not null || pagamentos.Metodo is not null))
+                )
+                {
+                    _context.Pagamentos.Add(pagamentos);
+                    await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    return BadRequest();
+                }
 
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            backup.Id = pagamentos.Id;
             return CreatedAtAction("GetPagamentos", new { id = pagamentos.Id }, pagamentos);
         }
 
@@ -109,15 +129,21 @@ namespace Hospital.Controllers.API
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePagamentos(int id)
         {
-            var pagamentos = await _context.Pagamentos.FindAsync(id);
-            if (pagamentos == null)
+            try
             {
-                return NotFound();
+                var pagamentos = await _context.Pagamentos.FindAsync(id);
+                if (pagamentos == null)
+                {
+                    return NotFound();
+                }
+
+                _context.Pagamentos.Remove(pagamentos);
+                await _context.SaveChangesAsync();
             }
-
-            _context.Pagamentos.Remove(pagamentos);
-            await _context.SaveChangesAsync();
-
+            catch (Exception)
+            {
+                throw;
+            }
             return NoContent();
         }
 

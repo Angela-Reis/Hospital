@@ -96,6 +96,7 @@ namespace Hospital.Controllers.API
             Prescricoes backup = prescricoes;
             try
             {
+
                 _context.Prescricoes.Add(prescricoes);
                 await _context.SaveChangesAsync();
             }
@@ -103,7 +104,8 @@ namespace Hospital.Controllers.API
             {
                 throw;
             }
-            return CreatedAtAction("GetPrescricoes", new { id = prescricoes.Id }, backup.Id = prescricoes.Id);
+            backup.Id = prescricoes.Id;
+            return CreatedAtAction("GetPrescricoes", new { id = prescricoes.Id }, backup);
         }
 
         // DELETE: api/PrescricoesAPI/5
