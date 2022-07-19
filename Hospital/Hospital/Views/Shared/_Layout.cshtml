@@ -34,7 +34,6 @@
 						</li>
 						@if (User.Identity.IsAuthenticated)
 						{
-							<text>
 							<li class="nav-item">
 								<a class="nav-link text-dark" asp-area="" asp-controller="Utentes" asp-action="Index">@(User.IsInRole("Utente") ? "Utente" : "Utentes")</a>
 							</li>
@@ -47,13 +46,12 @@
 							<li class="nav-item">
 								<a class="nav-link text-dark" asp-area="" asp-controller="Prescricoes" asp-action="Index">Prescrições</a>
 							</li>
-								@if (User.IsInRole("Administrador") || User.IsInRole("Utente"))
-								{
-									<li class="nav-item">
-										<a class="nav-link text-dark" asp-area="" asp-controller="Pagamentos" asp-action="Index">Pagamentos</a>
-									</li>
-								}
-							</text>
+							@if (User.IsInRole("Administrador") || User.IsInRole("Utente"))
+							{
+								<li class="nav-item">
+									<a class="nav-link text-dark" asp-area="" asp-controller="Pagamentos" asp-action="Index">Pagamentos</a>
+								</li>
+							}
 						}
 					</ul>
 					<partial name="_LoginPartial" />

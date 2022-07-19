@@ -9,7 +9,7 @@ namespace Hospital.Models.APIViewModels
         public string Valor { get; set; }
         public string Descricao { get; set; }
         public string Estado { get; set; }
-        public string? DataEfetuado { get; set; }
+        public string DataEfetuado { get; set; }
         public string Metodo { get; set; }
         public string Consulta { get; set; }
 
