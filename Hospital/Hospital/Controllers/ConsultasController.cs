@@ -113,6 +113,14 @@ namespace Hospital.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Data,Motivo,Estado,UtenteFK,MedicoFK,DiagnosticoFK")] Consultas consulta)
         {
+            if (User.IsInRole("Utente"))
+            {
+                string utilID = _userManager.GetUserId(User);
+                var utente = await _context.Utentes.Where(u => u.IdUtilizador == utilID).FirstOrDefaultAsync();
+                //se o utilizador é do Role Utente quando marca consulta esta fica pendente
+                consulta.Estado = "P";
+                consulta.UtenteFK = utente.Id;
+            }
             if (ModelState.IsValid)
             {
                 _context.Add(consulta);
@@ -138,12 +146,51 @@ namespace Hospital.Controllers
             {
                 return NotFound();
             }
+
+            if (User.IsInRole("Utente"))
+            {
+                return RedirectToAction("Cancel", consultas);
+
+            }
+
             ViewData["DiagnosticoFK"] = new SelectList(_context.Diagnosticos, "Id", "Titulo", consultas.DiagnosticoFK);
             ViewData["MedicoFK"] = new SelectList(_context.Medicos, "Id", "Nome", consultas.MedicoFK);
             ViewData["UtenteFK"] = new SelectList(_context.Utentes, "Id", "Nome", consultas.UtenteFK);
             //variavel de sessão que guarda o id da consulta a ser editada
             HttpContext.Session.SetInt32("ConsultaEditId", consultas.Id);
+
+
             return View(consultas);
+        }
+
+        public async Task<IActionResult> Cancel(Consultas consulta)
+        {
+            if (consulta == null || _context.Consultas == null)
+            {
+                return NotFound();
+            }
+            consulta.Estado = "C";
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(consulta);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!ConsultasExists(consulta.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return RedirectToAction("Index");
         }
 
         // POST: Consultas/Edit/5

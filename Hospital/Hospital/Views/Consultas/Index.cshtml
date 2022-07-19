@@ -1,78 +1,109 @@
 ﻿@model IEnumerable<Hospital.Models.Consultas>
 
 @{
-    ViewData["Title"] = "Index";
+	ViewData["Title"] = "Index";
 }
 
 <h1>Lista de Consultas</h1>
 
 <p>
-    <a asp-action="Create">Criar Novo</a>
+	<a asp-action="Create">Criar Novo</a>
 </p>
 <table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Data)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Motivo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Estado)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Utente)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Medico)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Diagnostico)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Data)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Motivo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Estado)
-            </td>
-            <td>
-                 @{  //concatenar o numero de utente do utente com o seu nome
-                     var utente = item.Utente.NumUtente + "-" + item.Utente.Nome;
-                 }
-                @Html.DisplayFor(modelItem => utente)
-            </td>
-            <td>
-                 @{  //concatenar o numero de cedula profissional do médico com o seu nome
-                     var medico = item.Medico.NumCedulaProf + "-" + item.Medico.Nome;
-                 }
-                 @Html.DisplayFor(modelItem => medico)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Diagnostico.Descricao)
-            </td>
-            <td>
+	<thead>
+		<tr>
+			<th>
+				@Html.DisplayNameFor(model => model.Data)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Motivo)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Estado)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Utente)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Medico)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Diagnostico)
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td>
+					@Html.DisplayFor(modelItem => item.Data)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Motivo)
+				</td>
+				<td>
+					@{
+						var estado = item.Estado;
+						switch (item.Estado.ToUpper())
+						{
+							case "P":
+								estado = "Pendente";
+								break;
+							case "M":
+								estado = "Marcada";
+								break;
+							case "F":
+								estado = "Finalizada";
+								break;
+							case "C":
+								estado = "Cancelada";
+								break;
+							default:
+								estado = "Desconhecido";
+								break;
+						}
+					}
+
+					@Html.DisplayFor(modelItem => item.Estado)
+
+				</td>
+				<td>
+					@{
+						//concatenar o numero de utente do utente com o seu nome
+						var utente = item.Utente.Nome + " (Utente: " + item.Utente.NumUtente + ")";
+					}
+					@Html.DisplayFor(modelItem => utente)
+				</td>
+				<td>
+					@{
+						//concatenar o numero de cedula profissional do médico com o seu nome
+						var medico = item.Medico.Nome + " (Cédula: " + item.Medico.NumCedulaProf + ")";
+					}
+					@Html.DisplayFor(modelItem => medico)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Diagnostico.Titulo)
+				</td>
+				<td>
 					@*Mostar Link para Editar se o utilizador for um Administrativo or for o Medico com id*@
-					@if (User.Identity.IsAuthenticated){
+					@if (User.Identity.IsAuthenticated && !User.IsInRole("Utente") ||
+						(User.IsInRole("Utente") && (item.Estado.ToUpper() == "M" || item.Estado.ToUpper() == "P")))
+					{
 						<text>
-							<a asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
+							@*Utentes não podem alterar consultas Finalizadas*@
+							@{var value = User.IsInRole("Utente") ? "Cancelar" : "Editar";}
+							<a asp-action="Edit" asp-route-id="@item.Id">@value</a> |
 						</text>
 					}
 					<a asp-action="Details" asp-route-id="@item.Id">Detalhes</a> |
-					@if (User.IsInRole("Administrativo")){
-							<a asp-action="Delete" asp-route-id="@item.Id">Apagar</a>
+					@if (User.IsInRole("Administrativo"))
+					{
+						<a asp-action="Delete" asp-route-id="@item.Id">Apagar</a>
 					}
-            </td>
-        </tr>
-}
-    </tbody>
+				</td>
+			</tr>
+		}
+	</tbody>
 </table>
