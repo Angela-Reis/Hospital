@@ -49,11 +49,9 @@
 						}
 						@if (User.IsInRole("Administrativo") || User.IsInRole("Medico"))
 						{
-							<text>
 							<li class="nav-item">
 								<a class="nav-link text-dark" asp-area="" asp-controller="Pagamentos" asp-action="Index">Pagamentos</a>
 							</li>        
-							</text>
 						}
 					</ul>
 					<partial name="_LoginPartial" />
