@@ -46,12 +46,14 @@
 							<li class="nav-item">
 								<a class="nav-link text-dark" asp-area="" asp-controller="Prescricoes" asp-action="Index">Prescrições</a>
 							</li>
-							@if (User.IsInRole("Administrador") || User.IsInRole("Utente"))
-							{
-								<li class="nav-item">
-									<a class="nav-link text-dark" asp-area="" asp-controller="Pagamentos" asp-action="Index">Pagamentos</a>
-								</li>
-							}
+						}
+						@if (User.IsInRole("Administrativo") || User.IsInRole("Medico"))
+						{
+							<text>
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-controller="Pagamentos" asp-action="Index">Pagamentos</a>
+							</li>        
+							</text>
 						}
 					</ul>
 					<partial name="_LoginPartial" />

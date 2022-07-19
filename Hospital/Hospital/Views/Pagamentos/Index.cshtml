@@ -41,7 +41,8 @@
 		{
 			<tr>
 				<td>
-					@Html.DisplayFor(modelItem => item.Consulta.Motivo)
+					@{var consulta = "(Cedula:" + item.Consulta.Medico.NumCedulaProf + ") " + item.Consulta.Data.ToString("dd/MM/yyyy");}
+					@Html.DisplayFor(modelItem => consulta)
 				</td>
 				<td>
 					@Html.DisplayFor(modelItem => item.Valor) €

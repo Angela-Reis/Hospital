@@ -36,13 +36,13 @@ namespace Hospital.Controllers
             {
                 //moatrar apenas diagnósticos do proprio utente
                 pagamentos = await _context.Pagamentos
-                    .Include(p => p.Consulta)
+                    .Include(p => p.Consulta).ThenInclude(m=> m.Medico)
                     .Where(p=>p.Consulta.Utente.IdUtilizador == utilID)
                     .ToListAsync();
             }
             else
             {
-                pagamentos = await _context.Pagamentos.Include(p => p.Consulta).ToListAsync();
+                pagamentos = await _context.Pagamentos.Include(p => p.Consulta).ThenInclude(m => m.Medico).ToListAsync();
             }
             return View(pagamentos);
         }

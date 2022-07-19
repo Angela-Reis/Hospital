@@ -12,12 +12,12 @@ namespace Hospital.Models
         /// PK para identificar o pagamento
         /// </summary>
         public int Id { get; set; }
-        
-        
+
+
         /// <summary>
         /// Atributo auxiliar para introduzir o valor do pagamento
         /// </summary>
-        [NotMapped]  
+        [NotMapped]
         [Required(ErrorMessage = "O {0} é de preenchimento obrigatório")]
         [RegularExpression("[0-9]{1,8}[,.]?[0-9]{0,2}", ErrorMessage = "O preço introduzido não é valido")]
         [Display(Name = "Valor")]
@@ -51,6 +51,9 @@ namespace Hospital.Models
         /// <summary>
         /// Metodo de pagamento
         /// </summary>
+        ///             {
+
+        [RegularExpression("MB|D|CC", ErrorMessage = "O {0} não é valido, só são validos os valores MB, D ou CC que correspondem a Multibanco, Dinheiro e Cartão de Crédito")]
         public string Metodo { get; set; }
 
         /// <summary>

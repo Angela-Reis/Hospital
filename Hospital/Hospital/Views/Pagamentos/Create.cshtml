@@ -37,12 +37,12 @@
             <div id="efetuado" style="display:none;">
                 <div class="form-group">
                     <label asp-for="DataEfetuado" class="control-label"></label>
-                    <input asp-for="DataEfetuado" class="form-control" />
+                    <input id="dataId" asp-for="DataEfetuado" class="form-control" />
                     <span asp-validation-for="DataEfetuado" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="Metodo" class="control-label"></label>
-                    <input asp-for="Metodo" class="form-control" />
+                    <input id="metodoId" asp-for="Metodo" class="form-control" />
                     <span asp-validation-for="Metodo" class="text-danger"></span>
                 </div>
             </div>
@@ -63,6 +63,8 @@
             efetuado.style.display = 'block';
           } else {
             efetuado.style.display = 'none';
+            document.getElementById("dataId").value = "";
+            document.getElementById("metodoId").value = "";
           }
     };
 </script>
